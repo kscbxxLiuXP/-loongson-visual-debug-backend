@@ -1,0 +1,73 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+package loongson;
+option java_multiple_files = true;
+option java_package = "com.loongson.debug.grpc";
+
+//定义服务
+service DebugService{
+  //client向server发送初始化请求，Server创建并返回uid
+  rpc init(google.protobuf.Empty) returns(google.protobuf.Int32Value){};
+
+  //client获取断点地址
+  rpc getBreakPoint(google.protobuf.Int32Value) returns (Address){};
+
+  //client给client发送当前运行地址
+  rpc setCurrentAddress(Address) returns(google.protobuf.Empty){};
+
+  //client向server获取能否继续向下执行的指令
+  rpc getCanExecute(google.protobuf.Int32Value) returns(CanExecute){};
+
+  //client向server设置当前调试状态
+  rpc setDebugState(DebugState) returns(google.protobuf.Empty){};
+
+  //client向server发送trace信息
+  rpc sendTrace(Trace) returns(google.protobuf.Empty){};
+
+  //client向server获取能否继续向下执行的指令
+  rpc getCanStart(google.protobuf.Int32Value) returns(CanStart){};
+
+  //client向server请求同步全局变量
+  rpc synchronizeVar(google.protobuf.Int32Value) returns(SynchronizeVarReply){};
+
+  //client运行结束，向server发出信号
+  rpc executeEnd(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
+}
+
+message SynchronizeVarReply{
+  bool DEBUG = 1;
+  bool canExecute = 2;
+  int64 breakPointAddress = 3;
+}
+
+message Trace{
+  int32 id = 1;
+  string trace = 2;
+}
+
+//地址类型消息类型
+message Address{
+  int32 id = 1;
+  int64 address = 2;
+}
+
+//可否继续执行
+message CanExecute{
+  bool canExecute = 1;
+}
+//可否开始执行
+message CanStart{
+  bool canStart = 1;
+}
+
+//当前debug状态
+message DebugState{
+  int32 id = 1;
+  int32 state = 2;
+}
+
+message Reply{
+  int32 res = 1;
+}
