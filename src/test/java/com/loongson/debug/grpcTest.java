@@ -3,6 +3,7 @@ package com.loongson.debug;
 import com.google.protobuf.Int32Value;
 import com.loongson.debug.grpc.Address;
 import com.loongson.debug.grpc.DebugServiceGrpc;
+import com.loongson.debug.grpc.IPAddress;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,14 @@ public class grpcTest {
 
     @Test
     void init() {
-        stub.init(null);
-        stub.init(null);
-        stub.init(null);
-        stub.init(null);
+        IPAddress ipAddress1 = IPAddress.newBuilder().setIp("17.5.6.3").build();
+        IPAddress ipAddress2 = IPAddress.newBuilder().setIp("10.2.5.5").build();
+        IPAddress ipAddress3 = IPAddress.newBuilder().setIp("192.168.0.1").build();
+        IPAddress ipAddress4 = IPAddress.newBuilder().setIp("Unknow").build();
+        stub.init(ipAddress1);
+        stub.init(ipAddress2);
+        stub.init(ipAddress3);
+        stub.init(ipAddress4);
 
     }
 

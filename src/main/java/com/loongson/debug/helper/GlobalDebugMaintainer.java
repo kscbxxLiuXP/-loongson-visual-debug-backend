@@ -27,9 +27,9 @@ public class GlobalDebugMaintainer {
     }
 
 
-    public int create() {
+    public int create(String ip) {
         count++;
-        map.put(count, new DebugVar(count));
+        map.put(count, new DebugVar(count,ip));
         return count;
     }
 

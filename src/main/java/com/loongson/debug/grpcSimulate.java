@@ -6,9 +6,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 public class grpcSimulate extends Thread {
-    private boolean end = false;
     private static boolean grpc = true;
-    public static int count = 20;
     private static int id;
     private static boolean canStart = false;
     private static long breakPointAddress;
@@ -28,20 +26,6 @@ public class grpcSimulate extends Thread {
     static ManagedChannel channel = ManagedChannelBuilder.forAddress("127.0.0.1", 50071).usePlaintext().build();
     static DebugServiceGrpc.DebugServiceBlockingStub stub = DebugServiceGrpc.newBlockingStub(channel);
 
-    //多线程负责与grpcServer通信
-    public void run() {
-        while (!end) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //需要同步的变量
-            //DEBUG
-            //canExecute
-            System.out.println(Thread.currentThread().getName() + "-当前剩余票数:" + count--);
-        }
-    }
 
     public static void main(String[] args) throws InterruptedException {
         //初始化多线程

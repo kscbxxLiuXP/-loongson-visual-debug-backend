@@ -9,7 +9,7 @@ option java_package = "com.loongson.debug.grpc";
 //定义服务
 service DebugService{
   //client向server发送初始化请求，Server创建并返回uid
-  rpc init(google.protobuf.Empty) returns(google.protobuf.Int32Value){};
+  rpc init(IPAddress) returns(google.protobuf.Int32Value){};
 
   //client获取断点地址
   rpc getBreakPoint(google.protobuf.Int32Value) returns (Address){};
@@ -19,6 +19,9 @@ service DebugService{
 
   //client向server获取能否继续向下执行的指令
   rpc getCanExecute(google.protobuf.Int32Value) returns(CanExecute){};
+
+  //client向server设置canExecute为true
+  rpc setCanExecuteTrue(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
 
   //client向server设置当前调试状态
   rpc setDebugState(DebugState) returns(google.protobuf.Empty){};
@@ -36,6 +39,9 @@ service DebugService{
   rpc executeEnd(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
 }
 
+message IPAddress{
+  string ip = 1;
+}
 message SynchronizeVarReply{
   bool DEBUG = 1;
   bool canExecute = 2;

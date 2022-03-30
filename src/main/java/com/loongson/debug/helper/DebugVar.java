@@ -10,28 +10,71 @@ public class DebugVar {
     private boolean canStart;
     private boolean canExecute;
     private boolean DEBUG;
+    private boolean end;
     private String createTime;
+    private String ip;
     /**
-     * 1. 不在运行中
-     * </br>
-     * 2. 运行中但是没到断点
-     * 3. 到断点，正在
-     * 4. 执行下一条信息
-     * 5.
+     * 1. 准备就绪
+     * 2. 执行中
+     * 3. 调试中
+     * 4. 已结束
+     * 5. 被终止
+     * 6. 连接丢失
      */
     private int debugState;
     private long currentAddress;
+    private long lastCommunicateTime;
 
-    public DebugVar(int id) {
+    public DebugVar(int id, String ip) {
         this.id = id;
         this.breakPointAddress = 0;
         this.canExecute = false;
-        this.debugState = 0;
+        this.debugState = 1;
         this.DEBUG = false;
         this.currentAddress = 0;
         this.canStart = false;
+        this.end = false;
+        this.ip = ip;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         createTime = simpleDateFormat.format(new Date());
+    }
+
+    public void communicate() {
+        this.lastCommunicateTime = new Date().getTime();
+    }
+
+    public boolean connectLost() {
+        Date date = new Date();
+        long cha = date.getTime() - lastCommunicateTime;
+        if (cha <= 300000) {
+            return false; //说明小于5分钟
+        } else {
+            return true;
+        }
+    }
+
+    public long getLastCommunicateTime() {
+        return lastCommunicateTime;
+    }
+
+    public void setLastCommunicateTime(long lastCommunicateTime) {
+        this.lastCommunicateTime = lastCommunicateTime;
+    }
+
+    public boolean isEnd() {
+        return end;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getCreateTime() {
