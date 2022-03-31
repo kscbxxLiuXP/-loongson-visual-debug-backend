@@ -1,12 +1,19 @@
 package com.loongson.debug.grpc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.protobuf.Empty;
 import com.google.protobuf.Int32Value;
 import com.loongson.debug.helper.DebugVar;
 import com.loongson.debug.helper.GlobalDebugMaintainer;
+import com.loongson.debug.websocket.WebSocket;
 import io.grpc.stub.StreamObserver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
+    WebSocket webSocket = new WebSocket();
+
     private GlobalDebugMaintainer globalDebugMaintainer;
 
     public OnlineDebugServer() {
@@ -14,9 +21,19 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
     }
 
     @Override
-    public void setCanExecuteTrue(Int32Value request, StreamObserver<Empty> responseObserver) {
+    public void setDEBUGTrue(Int32Value request, StreamObserver<Empty> responseObserver) {
+        int id = request.getValue();
+        globalDebugMaintainer.get(id).setDEBUG(true);
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void setCanExecuteFalse(Int32Value request, StreamObserver<Empty> responseObserver) {
         int id = request.getValue();
         globalDebugMaintainer.get(id).setCanExecute(false);
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -47,6 +64,19 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
     public void executeEnd(Int32Value request, StreamObserver<Empty> responseObserver) {
         int id = request.getValue();
         globalDebugMaintainer.get(id).setEnd(true);
+        if (globalDebugMaintainer.get(id).getDebugState()!=5){
+            globalDebugMaintainer.get(id).setDebugState(4);
+            JSONObject reply = new JSONObject();
+            reply.put("type", 7);
+            reply.put("data", globalDebugMaintainer.get(id));
+            try {
+                webSocket.sendMessageTo(reply.toJSONString(), id);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -69,6 +99,8 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
     public void setCurrentAddress(Address request, StreamObserver<Empty> responseObserver) {
         int id = request.getId();
         globalDebugMaintainer.get(id).setCurrentAddress(request.getAddress());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -80,11 +112,26 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
 
     @Override
     public void setDebugState(DebugState request, StreamObserver<Empty> responseObserver) {
+        System.out.println("Server: setDebugState");
         globalDebugMaintainer.get(request.getId()).setDebugState(request.getState());
+        JSONObject reply = new JSONObject();
+        reply.put("type", 6);
+        reply.put("data", globalDebugMaintainer.get(request.getId()));
+        try {
+            webSocket.sendMessageTo(reply.toJSONString(), request.getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+
     }
 
     @Override
     public void sendTrace(Trace request, StreamObserver<Empty> responseObserver) {
-        super.sendTrace(request, responseObserver);
+        System.out.println("Server sendTrace Called");
+        System.out.println(request.getTrace());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
     }
 }

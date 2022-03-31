@@ -3,6 +3,7 @@ package com.loongson.debug;
 import com.google.protobuf.Int32Value;
 import com.loongson.debug.grpc.Address;
 import com.loongson.debug.grpc.DebugServiceGrpc;
+import com.loongson.debug.grpc.DebugState;
 import com.loongson.debug.grpc.IPAddress;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -29,7 +30,10 @@ public class grpcTest {
     void simulate(){
 
     }
-
+    @Test
+    void setState(){
+        stub.setDebugState(DebugState.newBuilder().setId(1).setState(2).build());
+    }
 
 
     @Test

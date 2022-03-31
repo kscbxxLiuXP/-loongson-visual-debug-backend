@@ -21,7 +21,10 @@ service DebugService{
   rpc getCanExecute(google.protobuf.Int32Value) returns(CanExecute){};
 
   //client向server设置canExecute为true
-  rpc setCanExecuteTrue(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
+  rpc setCanExecuteFalse(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
+
+  //client设置DEBUG为true
+  rpc setDEBUGTrue(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
 
   //client向server设置当前调试状态
   rpc setDebugState(DebugState) returns(google.protobuf.Empty){};
@@ -37,6 +40,8 @@ service DebugService{
 
   //client运行结束，向server发出信号
   rpc executeEnd(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
+
+
 }
 
 message IPAddress{

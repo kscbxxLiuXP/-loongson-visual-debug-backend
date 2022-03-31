@@ -24,4 +24,10 @@ public class OnlineDebugController {
         ArrayList<DebugVar> availables = new ArrayList<>(values);
         return availables;
     }
+    @GetMapping("/get")
+    public DebugVar getByID(int id) {
+        GlobalDebugMaintainer globalDebugMaintainer = GlobalDebugMaintainer.getInstance();
+        DebugVar debugVar = globalDebugMaintainer.get(id);
+        return debugVar;
+    }
 }
