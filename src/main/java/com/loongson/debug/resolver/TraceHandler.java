@@ -106,7 +106,6 @@ public class TraceHandler {
                 //String fromAddress = split[2];
                 //String toAddress = split[7];
 
-
                 String fromAddress = "0x" + line.substring(26, 34);
                 String toAddress = "0x" + line.substring(61, 69);
 

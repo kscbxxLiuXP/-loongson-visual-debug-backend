@@ -99,6 +99,7 @@ public class grpcSimulate extends Thread {
                 stub.setDEBUGTrue(Int32Value.newBuilder().setValue(id).build());
                 //更新debugState
                 stub.setDebugState(DebugState.newBuilder().setId(id).setState(3).build());
+
                 //等待执行
                 //synchronizeVarThread.start();
                 new Thread() {

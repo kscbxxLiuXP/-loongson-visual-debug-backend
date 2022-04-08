@@ -85,12 +85,14 @@ public class WebSocket {
                 startRun(id);
                 break;
             case 5:
+                //stopRun
                 reply.put("type", 5);
                 stopRun(id);
                 break;
             // case 6 被占用，更新debugState
             // case 7 被占用，Latx运行结束，Latx rpc发送信号
-            case 8:
+            // case 8 被占用，Latx发送trace回来
+            case 9:
                 break;
         }
         reply.put("data", globalDebugMaintainer.get(id));

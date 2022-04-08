@@ -5,6 +5,7 @@ import com.google.protobuf.Empty;
 import com.google.protobuf.Int32Value;
 import com.loongson.debug.helper.DebugVar;
 import com.loongson.debug.helper.GlobalDebugMaintainer;
+import com.loongson.debug.resolver.OnlineTraceHandler;
 import com.loongson.debug.websocket.WebSocket;
 import io.grpc.stub.StreamObserver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +51,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
         int id = request.getValue();
         DebugVar debugVar = globalDebugMaintainer.get(id);
 
-        responseObserver.onNext(SynchronizeVarReply
-                .newBuilder()
-                .setCanExecute(debugVar.isCanExecute())
-                .setDEBUG(debugVar.isDEBUG())
-                .setBreakPointAddress(debugVar.getBreakPointAddress())
-                .build());
+        responseObserver.onNext(SynchronizeVarReply.newBuilder().setCanExecute(debugVar.isCanExecute()).setDEBUG(debugVar.isDEBUG()).setBreakPointAddress(debugVar.getBreakPointAddress()).build());
         responseObserver.onCompleted();
 
     }
@@ -64,7 +60,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
     public void executeEnd(Int32Value request, StreamObserver<Empty> responseObserver) {
         int id = request.getValue();
         globalDebugMaintainer.get(id).setEnd(true);
-        if (globalDebugMaintainer.get(id).getDebugState()!=5){
+        if (globalDebugMaintainer.get(id).getDebugState() != 5) {
             globalDebugMaintainer.get(id).setDebugState(4);
             JSONObject reply = new JSONObject();
             reply.put("type", 7);
@@ -130,7 +126,19 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
     @Override
     public void sendTrace(Trace request, StreamObserver<Empty> responseObserver) {
         System.out.println("Server sendTrace Called");
-        System.out.println(request.getTrace());
+
+        OnlineTraceHandler traceHandler = new OnlineTraceHandler();
+        traceHandler.handleOnlineTrace(request.getId(), request.getTrace());
+        JSONObject reply = new JSONObject();
+
+        reply.put("type", 8);
+        reply.put("trace", request.getTrace());
+        reply.put("data", globalDebugMaintainer.get(request.getId()));
+        try {
+            webSocket.sendMessageTo(reply.toJSONString(), request.getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
     }

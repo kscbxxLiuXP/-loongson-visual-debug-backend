@@ -6,6 +6,8 @@ import com.loongson.debug.entity.IR2;
 import com.loongson.debug.entity.TbBlock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 ///
@@ -33,6 +35,26 @@ public class TBBlockDTO {
     private ArrayList<IR1> IR1Instr;
     private ArrayList<IR2> IR2Instr;
     private ArrayList<Integer> IR2Map;
+
+    //用于前端vo呈现
+    private boolean expand = false;
+    private Map<String, String> registers = null;
+
+    public boolean isExpand() {
+        return expand;
+    }
+
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+    }
+
+    public Map<String, String> getRegisters() {
+        return registers;
+    }
+
+    public void setRegisters(Map<String, String> registers) {
+        this.registers = registers;
+    }
 
     public Integer getLtid() {
         return ltid;
@@ -172,20 +194,6 @@ public class TBBlockDTO {
 
     @Override
     public String toString() {
-        return "TBBlockDto{" +
-                "uid=" + uid +
-                ", tbindex=" + tbindex +
-                ", ltid=" + ltid +
-                ", TBAddress='" + TBAddress + '\'' +
-                ", startAddressIR1='" + startAddressIR1 + '\'' +
-                ", endAddressIR1='" + endAddressIR1 + '\'' +
-                ", startAddressIR2='" + startAddressIR2 + '\'' +
-                ", endAddressIR2='" + endAddressIR2 + '\'' +
-                ", IR1Num=" + IR1Num +
-                ", IR2Num=" + IR2Num +
-                ", IR1Instr=" + IR1Instr +
-                ", IR2Instr=" + IR2Instr +
-                ", IR2Map=" + IR2Map +
-                '}';
+        return "TBBlockDto{" + "uid=" + uid + ", tbindex=" + tbindex + ", ltid=" + ltid + ", TBAddress='" + TBAddress + '\'' + ", startAddressIR1='" + startAddressIR1 + '\'' + ", endAddressIR1='" + endAddressIR1 + '\'' + ", startAddressIR2='" + startAddressIR2 + '\'' + ", endAddressIR2='" + endAddressIR2 + '\'' + ", IR1Num=" + IR1Num + ", IR2Num=" + IR2Num + ", IR1Instr=" + IR1Instr + ", IR2Instr=" + IR2Instr + ", IR2Map=" + IR2Map + '}';
     }
 }
