@@ -29,8 +29,11 @@ service DebugService{
   //client向server设置当前调试状态
   rpc setDebugState(DebugState) returns(google.protobuf.Empty){};
 
-  //client向server发送trace信息
+  //client向server发送trace信息（trace信息应该包含寄存器信息)
   rpc sendTrace(Trace) returns(google.protobuf.Empty){};
+
+  //client向server发送Linking TBs信息
+  rpc linkTBs(LinkingTB) returns(google.protobuf.Empty){};
 
   //client向server获取能否继续向下执行的指令
   rpc getCanStart(google.protobuf.Int32Value) returns(CanStart){};
@@ -41,7 +44,13 @@ service DebugService{
   //client运行结束，向server发出信号
   rpc executeEnd(google.protobuf.Int32Value) returns(google.protobuf.Empty){};
 
-
+  //afterDebugMode一起进行数值设置
+  rpc afterDebugMode(google.protobuf.Int32Value) returns (google.protobuf.Empty){};
+}
+message LinkingTB{
+  int32 id = 1;
+  string linkTBFrom = 2;
+  string linkTBTo = 3;
 }
 
 message IPAddress{
@@ -55,7 +64,9 @@ message SynchronizeVarReply{
 
 message Trace{
   int32 id = 1;
-  string trace = 2;
+  string address = 2;
+  string registers = 3;
+  string tbtype = 4;
 }
 
 //地址类型消息类型

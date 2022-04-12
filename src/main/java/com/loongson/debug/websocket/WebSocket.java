@@ -1,7 +1,7 @@
 package com.loongson.debug.websocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.api.client.json.Json;
+import com.loongson.debug.entity.OnlineDebug;
 import com.loongson.debug.helper.GlobalDebugMaintainer;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +58,8 @@ public class WebSocket {
             case 0:
                 //设置断点
                 reply.put("type", 0);
-                long address = Long.parseLong((String) jsonObject.get("address"));
+                Object o = jsonObject.get("address");
+                long address = Long.parseLong(o.toString());
                 setBreakPoint(id, address);
                 reply.put("code", 1);
                 break;
@@ -92,6 +93,7 @@ public class WebSocket {
             // case 6 被占用，更新debugState
             // case 7 被占用，Latx运行结束，Latx rpc发送信号
             // case 8 被占用，Latx发送trace回来
+            // case 9 被占用，Latx发送TBLink回来
             case 9:
                 break;
         }
@@ -101,44 +103,58 @@ public class WebSocket {
     }
 
     public void startRun(int id) {
-        globalDebugMaintainer.get(id).setCanStart(true);
-        globalDebugMaintainer.get(id).setDebugState(7);
+        OnlineDebug onlineDebug = new OnlineDebug();
+        onlineDebug.setUid(id);
+        onlineDebug.setCanstart(true);
+        onlineDebug.setDebugstate(7);
+        globalDebugMaintainer.updateByObject(onlineDebug);
     }
 
     public void stopRun(int id) {
-        globalDebugMaintainer.get(id).setCanExecute(true);
-        globalDebugMaintainer.get(id).setBreakPointAddress(-1);
-        globalDebugMaintainer.get(id).setDEBUG(false);
-        globalDebugMaintainer.get(id).setDebugState(5);
+        OnlineDebug onlineDebug = new OnlineDebug();
+        onlineDebug.setUid(id);
+        onlineDebug.setCanexecute(true);
+        onlineDebug.setBreakpointaddress(-1L);
+        onlineDebug.setDebug(false);
+        onlineDebug.setDebugstate(5);
+        globalDebugMaintainer.updateByObject(onlineDebug);
     }
 
     public void setBreakPoint(int id, long address) {
-        globalDebugMaintainer.get(id).setBreakPointAddress(address);
+
+        globalDebugMaintainer.setBreakPointAddress(id, address);
     }
 
     public void nextStep(int id) {
+        OnlineDebug onlineDebug = new OnlineDebug();
+        onlineDebug.setUid(id);
         //设置canExecute为true
-        globalDebugMaintainer.get(id).setCanExecute(true);
+        onlineDebug.setCanexecute(true);
         //设置为7 等待latx更新状态
-        globalDebugMaintainer.get(id).setDebugState(7);
-
+        onlineDebug.setDebugstate(7);
+        globalDebugMaintainer.updateByObject(onlineDebug);
     }
 
     public void runToNextBreakPoint(int id) {
+        OnlineDebug onlineDebug = new OnlineDebug();
+        onlineDebug.setUid(id);
+
         //关闭单步调试模式，使调试器能够比较执行地址
-        globalDebugMaintainer.get(id).setDEBUG(false);
-        globalDebugMaintainer.get(id).setCanExecute(true);
-
+        onlineDebug.setDebug(false);
+        onlineDebug.setCanexecute(true);
         //设置为7等待latx更新状态
-        globalDebugMaintainer.get(id).setDebugState(7);
-
+        onlineDebug.setDebugstate(7);
+        globalDebugMaintainer.updateByObject(onlineDebug);
     }
 
     public void runToEnd(int id) {
-        globalDebugMaintainer.get(id).setCanExecute(true);
-        globalDebugMaintainer.get(id).setBreakPointAddress(-1);
-        globalDebugMaintainer.get(id).setDEBUG(false);
-        globalDebugMaintainer.get(id).setDebugState(7);
+        OnlineDebug onlineDebug = new OnlineDebug();
+        onlineDebug.setUid(id);
+        onlineDebug.setCanexecute(true);
+        onlineDebug.setBreakpointaddress(-1L);
+        onlineDebug.setDebug(false);
+        onlineDebug.setDebugstate(7);
+        globalDebugMaintainer.updateByObject(onlineDebug);
 
     }
 

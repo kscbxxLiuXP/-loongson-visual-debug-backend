@@ -4,14 +4,72 @@ import com.alibaba.fastjson.JSON;
 import com.loongson.debug.entity.DebugTrace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DebugTraceDTO {
+    //id与tbindex相对应
     private Integer uid;
 
     private Integer debugid;
 
-    private ArrayList<DebugTraceItem> tracelist;
+    private ArrayList<String> nextids;
+    private ArrayList<String> parents;
+    /**
+     * 间接跳转目的地址，如果没有则为-1
+     */
+    private String indirectTo;
+    /**
+     * 间接跳转源地址，如果没有则为-1
+     */
+    private String indirectFrom;
+    private String address;
+    private String tbtype;
+    private Map<String, String> registers;
 
+
+    public DebugTraceDTO() {
+        this.nextids = new ArrayList<>();
+        this.parents = new ArrayList<>();
+    }
+
+    public DebugTraceDTO(DebugTrace debugTrace) {
+        this.uid = debugTrace.getUid();
+        this.debugid = debugTrace.getDebugid();
+        this.nextids = (ArrayList<String>) JSON.parseArray(debugTrace.getNextids(), String.class);
+        this.parents = (ArrayList<String>) JSON.parseArray(debugTrace.getParents(), String.class);
+        this.indirectTo = debugTrace.getIndirectTo();
+        this.indirectFrom = debugTrace.getIndirectFrom();
+        this.address = debugTrace.getAddress();
+        this.tbtype = debugTrace.getTbtype();
+        this.registers = JSON.parseObject(debugTrace.getRegisters(), HashMap.class);
+    }
+
+    @Override
+    public String toString() {
+        return address + "(" + uid + ")";
+    }
+
+    public String toString1() {
+        String s = address + "(" + uid + ")" + nextids + parents + registers;
+        if (!indirectTo.equals("-1")) {
+            s += "\n\t间接跳转" + address + "->" + indirectTo;
+        }
+        if (!indirectFrom.equals("-1")) {
+            s += "\n\t间接跳转" + indirectFrom + "->" + address;
+        }
+        return s;
+    }
+
+    public String toString2() {
+        return "TraceItem{" +
+                "id=" + uid +
+                ", nextids=" + nextids +
+                ", parents=" + nextids +
+                ", registerValues=" + nextids +
+                ", tbtype='" + tbtype + '\'' +
+                '}';
+    }
 
     public Integer getUid() {
         return uid;
@@ -29,33 +87,61 @@ public class DebugTraceDTO {
         this.debugid = debugid;
     }
 
-    public ArrayList<DebugTraceItem> getTracelist() {
-        return tracelist;
+    public String getIndirectTo() {
+        return indirectTo;
     }
 
-    public void setTracelist(ArrayList<DebugTraceItem> tracelist) {
-        this.tracelist = tracelist;
+    public void setIndirectTo(String indirectTo) {
+        this.indirectTo = indirectTo;
     }
 
-    public DebugTraceDTO() {
+    public String getIndirectFrom() {
+        return indirectFrom;
     }
 
-    //第一次解析解析完成后创建
-    public DebugTraceDTO(ArrayList<DebugTraceItem> tracelist, int debugid) {
-        this.tracelist = tracelist;
-        this.debugid = debugid;
+    public void setIndirectFrom(String indirectFrom) {
+        this.indirectFrom = indirectFrom;
     }
 
-    //由json字符串转义
-    public DebugTraceDTO(DebugTrace debugTrace) {
-        this.uid = debugTrace.getUid();
-        this.debugid = debugTrace.getDebugid();
-        this.tracelist = (ArrayList<DebugTraceItem>) JSON.parseArray(debugTrace.getTracelist(), DebugTraceItem.class);
-
+    public Map<String, String> getRegisters() {
+        return registers;
     }
 
-    @Override
-    public String toString() {
-        return "TraceDTO{" + "uid=" + uid + ", ltid=" + debugid + ", tracelist=" + tracelist + '}';
+    public void setRegisters(Map<String, String> register) {
+        this.registers = register;
+    }
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
+    public ArrayList<String> getNextids() {
+        return nextids;
+    }
+
+    public void setNextids(ArrayList<String> nextids) {
+        this.nextids = nextids;
+    }
+
+    public String getTbtype() {
+        return tbtype;
+    }
+
+    public void setTbtype(String tbtype) {
+        this.tbtype = tbtype;
+    }
+
+    public ArrayList<String> getParents() {
+        return parents;
+    }
+
+    public void setParents(ArrayList<String> parents) {
+        this.parents = parents;
     }
 }

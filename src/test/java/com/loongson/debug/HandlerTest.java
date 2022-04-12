@@ -8,6 +8,7 @@ import com.loongson.debug.dto.TBBlockDTO;
 import com.loongson.debug.entity.TbBlock;
 import com.loongson.debug.resolver.*;
 import com.loongson.debug.service.ITbBlockService;
+import com.loongson.debug.util.HexDecUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,7 +81,19 @@ public class HandlerTest {
         traceHandler.init(tbBlockService);
 
         File file = new File("data/tracefull0326");
-        TraceDTO handle = traceHandler.handle(file,4);
+        TraceDTO handle = traceHandler.handle(file, 4);
         System.out.println(handle);
+    }
+
+    @Test
+    void OnlineTraceHandlerTest() {
+        //register:ffffffff9000010b 0000000a 3f7b4f3c 6fffffff 3ffff360 3ffff498 6ffffdff 3f7b5000
+        //result:18446744071830503691,10,1065045820,1879048191,1073738592,1073738904,1879047679,1065046016
+        String s = "18446744071830503691,10,1065045820,1879048191,1073738592,1073738904,1879047679,1065046016";
+        String[] split = s.split(",");
+        for (String s1 : split) {
+            System.out.println(Long.parseLong(s1,16));
+        }
+
     }
 }

@@ -92,7 +92,7 @@ public class grpcSimulate extends Thread {
             if (DEBUG) {
                 //拦截
                 //发送trace
-                stub.sendTrace(Trace.newBuilder().setId(id).setTrace("hahsdhajshdjasdhjka").build());
+                stub.sendTrace(Trace.newBuilder().setId(id).setAddress("3745855").setRegisters("00000000 00000000 00000000 00000000 00000000 00000000 00000000 3ffff200 3f78d0b0 00000202").build());
                 //更新地址
                 stub.setCurrentAddress(Address.newBuilder().setId(id).setAddress(i).build());
                 //同步DEBUG状态
@@ -142,7 +142,7 @@ public class grpcSimulate extends Thread {
 
             System.out.println("--------execute tb------------");
             Thread.sleep(10);
-
+            stub.linkTBs(LinkingTB.newBuilder().setId(id).setLinkTBFrom("374555").setLinkTBTo("1515615").build());
         }
         stub.executeEnd(Int32Value.newBuilder().setValue(id).build());
 
