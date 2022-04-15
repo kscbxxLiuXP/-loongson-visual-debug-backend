@@ -1,6 +1,7 @@
 package com.loongson.debug.dto;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.loongson.debug.entity.DebugTrace;
 
 import java.util.ArrayList;
@@ -23,12 +24,21 @@ public class DebugTraceDTO {
      * 间接跳转源地址，如果没有则为-1
      */
     private String indirectFrom;
+    private String skipFrom;
+    /**
+     * 调试模式直接跳转，如果没有则为-1
+     */
+    private String skipTo;
     private String address;
     private String tbtype;
     private Map<String, String> registers;
 
 
     public DebugTraceDTO() {
+        this.indirectFrom = "-1";
+        this.indirectTo = "-1";
+        this.skipFrom = "-1";
+        this.skipTo = "-1";
         this.nextids = new ArrayList<>();
         this.parents = new ArrayList<>();
     }
@@ -40,6 +50,8 @@ public class DebugTraceDTO {
         this.parents = (ArrayList<String>) JSON.parseArray(debugTrace.getParents(), String.class);
         this.indirectTo = debugTrace.getIndirectTo();
         this.indirectFrom = debugTrace.getIndirectFrom();
+        this.skipFrom = debugTrace.getSkipFrom();
+        this.skipTo = debugTrace.getSkipTo();
         this.address = debugTrace.getAddress();
         this.tbtype = debugTrace.getTbtype();
         this.registers = JSON.parseObject(debugTrace.getRegisters(), HashMap.class);
@@ -69,6 +81,22 @@ public class DebugTraceDTO {
                 ", registerValues=" + nextids +
                 ", tbtype='" + tbtype + '\'' +
                 '}';
+    }
+
+    public String getSkipFrom() {
+        return skipFrom;
+    }
+
+    public void setSkipFrom(String skipFrom) {
+        this.skipFrom = skipFrom;
+    }
+
+    public String getSkipTo() {
+        return skipTo;
+    }
+
+    public void setSkipTo(String skipTo) {
+        this.skipTo = skipTo;
     }
 
     public Integer getUid() {

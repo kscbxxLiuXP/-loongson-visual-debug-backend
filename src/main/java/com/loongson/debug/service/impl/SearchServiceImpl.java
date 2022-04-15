@@ -1,11 +1,13 @@
 package com.loongson.debug.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.loongson.debug.dto.SearchResultDTO;
 import com.loongson.debug.dto.TBBlockDTO;
 import com.loongson.debug.entity.Head;
 import com.loongson.debug.entity.IR1;
 import com.loongson.debug.entity.IR2;
 import com.loongson.debug.entity.TbBlock;
+import com.loongson.debug.mapper.TbBlockMapper;
 import com.loongson.debug.service.IHeadService;
 import com.loongson.debug.service.ITbBlockService;
 import com.loongson.debug.service.SearchService;
@@ -17,11 +19,59 @@ import java.util.List;
 
 @Service
 public class SearchServiceImpl implements SearchService {
-
+    @Autowired
+    TbBlockMapper tbBlockMapper;
     @Autowired
     IHeadService headService;
     @Autowired
     ITbBlockService tbBlockService;
+
+    @Override
+    public List<SearchResultDTO> searchAddress2(int ltid, String address) {
+        QueryWrapper<TbBlock> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ltid", ltid).like("IR1Instr", address).or().like("IR2Instr", address);
+        List<TbBlock> tbBlocks = tbBlockService.list(queryWrapper);
+        List<SearchResultDTO> searchResults = new ArrayList<>();
+
+        TBBlockDTO tbBlockDTO = null;
+        int snum = 1;
+
+        for (TbBlock tbBlock : tbBlocks) {
+            tbBlockDTO = new TBBlockDTO(tbBlock);
+            for (IR1 ir1 : tbBlockDTO.getIR1Instr()) {
+                boolean contains = ir1.getAddress().contains(address);
+                boolean contains2 = ir1.getInstruction().getOperand().contains(address);
+                //找到了
+                if (contains || contains2) {
+                    //添加记录
+                    String selectID = "TB-" + tbBlock.getTbindex() + "-ir1-" + ir1.getId();
+                    searchResults.add(new SearchResultDTO(snum, tbBlock.getTbindex(), 1, ir1.getId(), selectID));
+                    snum++;
+                }
+            }
+            for (IR2 ir2 : tbBlockDTO.getIR2Instr()) {
+                boolean contains = ir2.getAddress().contains(address);
+                boolean contains2 = ir2.getInstruction().getOperand().contains(address);
+                //找到了
+                if (contains || contains2) {
+                    String selectID = "TB-" + tbBlock.getTbindex() + "-ir2-" + ir2.getId();
+                    searchResults.add(new SearchResultDTO(snum, tbBlock.getTbindex(), 2, ir2.getId(), selectID));
+                    snum++;
+                    //添加记录
+                }
+            }
+        }
+        System.out.println(tbBlocks.size());
+        return searchResults;
+    }
+
+    @Override
+    public List<SearchResultDTO> searchAddress3(int ltid, String address) {
+
+        List<TbBlock> tbBlocks = tbBlockMapper.getTbBlockContainAddress(ltid, address);
+        System.out.println(tbBlocks.size());
+        return null;
+    }
 
     @Override
     public List<SearchResultDTO> searchAddress(int ltid, String address, boolean skipHead) {

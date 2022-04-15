@@ -132,6 +132,8 @@ public class WebSocket {
         onlineDebug.setCanexecute(true);
         //设置为7 等待latx更新状态
         onlineDebug.setDebugstate(7);
+        //设置skipExecute为false
+        onlineDebug.setSkipExecute(false);
         globalDebugMaintainer.updateByObject(onlineDebug);
     }
 
@@ -141,6 +143,8 @@ public class WebSocket {
 
         //关闭单步调试模式，使调试器能够比较执行地址
         onlineDebug.setDebug(false);
+        //设置skip执行为true
+        onlineDebug.setSkipExecute(true);
         onlineDebug.setCanexecute(true);
         //设置为7等待latx更新状态
         onlineDebug.setDebugstate(7);

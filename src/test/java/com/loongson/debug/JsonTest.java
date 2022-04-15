@@ -66,4 +66,17 @@ public class JsonTest {
         System.out.println(hashMap);
         System.out.println(hashMap.get(1));
     }
+    @Test
+    void convertMapToJson2() {
+        produceData();
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("0x123531",2626);
+        map.put("0x123532",12);
+        map.put("0x123533",22);
+        map.put("0x123534",345);
+        map.put("0x123535",3432);
+        map.put("0x123536",232424);
+        String map1 = JSON.toJSONString(map);
+        System.out.println(map1);
+    }
 }

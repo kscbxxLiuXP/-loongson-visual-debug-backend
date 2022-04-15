@@ -58,12 +58,21 @@ public class DatabaseReadWriteTest {
     }
 
     @Test
-        //读取全部tbblocks时速度很慢
-    void ReadTest() {
+    //读取全部tbblocks时速度很慢
+    void ReadSimpleTbBlockTest() {
         long startTime = System.currentTimeMillis();
-        List<TbBlock> tbBlocks = tbBlockService.getTbBlocksSimple(1);
-        System.out.println(tbBlocks);
+        List<TbBlock> tbBlocks = tbBlockService.getTbBlocksSimple(8);
+        System.out.println(tbBlocks.size());
         long endTime = System.currentTimeMillis();
-        System.out.println("数据库读取TB块用时:" + (endTime - startTime) + "ms");
+        System.out.println("数据库读取SimpleTB块用时:" + (endTime - startTime) + "ms");
+    }
+    @Test
+    //读取全部tbblocks时速度很慢
+    void ReadEntireBlockTest() {
+        long startTime = System.currentTimeMillis();
+        List<TbBlock> tbBlocks = tbBlockService.getTbBlocks(8);
+        System.out.println(tbBlocks.size());
+        long endTime = System.currentTimeMillis();
+        System.out.println("数据库读取EntireTB块用时:" + (endTime - startTime) + "ms");
     }
 }

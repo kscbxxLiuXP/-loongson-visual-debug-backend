@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -66,7 +67,9 @@ public class DebugController {
 
         timer.start();
         List<TBBlockSimple> tbBlockSimples = new ArrayList<>();
+        Map<String, Integer> addressIndexMap = new HashMap<>();
         for (TbBlock tbBlock : tbBlocks) {
+            addressIndexMap.put(tbBlock.getStartaddressir1(), tbBlock.getTbindex());
             TBBlockSimple tbBlockSimple = new TBBlockSimple(tbBlock);
             tbBlockSimples.add(tbBlockSimple);
         }
@@ -77,12 +80,14 @@ public class DebugController {
         returnRes.put("ltlog", ltLog);
         returnRes.put("head", headDTO);
         returnRes.put("simpleTbBlocks", tbBlockSimples);
+        returnRes.put("addressIndexMap", addressIndexMap);
         return returnRes;
     }
 
     @GetMapping("/debug/search/address")
     public HashMap<String, Object> debugSearchAddress(int ltid, String address, boolean skipHead) {
-        List<SearchResultDTO> searchResultDTOS = searchService.searchAddress(ltid, address, skipHead);
+//        List<SearchResultDTO> searchResultDTOS = searchService.searchAddress(ltid, address, skipHead);
+        List<SearchResultDTO> searchResultDTOS = searchService.searchAddress2(ltid, address);
         HashMap<String, Object> returnRes = new HashMap<>();
 
         returnRes.put("results", searchResultDTOS);

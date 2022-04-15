@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.loongson.debug.entity.LtLog;
 import com.loongson.debug.entity.User;
-import com.loongson.debug.mapper.HeadMapper;
-import com.loongson.debug.mapper.LtLogMapper;
-import com.loongson.debug.mapper.TbBlockMapper;
-import com.loongson.debug.mapper.UserMapper;
+import com.loongson.debug.mapper.*;
 import com.loongson.debug.service.ILtLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,8 @@ public class LtLogServiceImpl extends ServiceImpl<LtLogMapper, LtLog> implements
 
     @Autowired
     TbBlockMapper tbBlockMapper;
+    @Autowired
+    TraceMapper traceMapper;
 
     @Autowired
     UserMapper userMapper;
@@ -88,6 +87,7 @@ public class LtLogServiceImpl extends ServiceImpl<LtLogMapper, LtLog> implements
         int i = ltLogMapper.deleteById(ltid);
         QueryWrapper queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("ltid", ltid);
+        traceMapper.delete(queryWrapper);
         headMapper.delete(queryWrapper);
         tbBlockMapper.delete(queryWrapper);
         return i;

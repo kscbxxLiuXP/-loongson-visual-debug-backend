@@ -101,4 +101,17 @@ public class TextSplitTest {
         System.out.println(s.substring(26,34));
         System.out.println(s.substring(61,69));
     }
+
+    /**
+     * 在解析下面的字符串时，有概率与其他输出混淆，导致异常
+     * 例：[10, 1] -------   4962282
+     * 异常：30.0%] 75/250 frames
+     */
+    @Test
+    void IR1IR2InvokeTextTest(){
+        //需要进一步验证
+        String line = "[1, 1] -------   4962282";
+        String[] s = line.trim().split(",");
+        System.out.println(s);
+    }
 }

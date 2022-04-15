@@ -71,7 +71,9 @@ public class GlobalDebugMaintainer {
     public void setBreakPointAddress(int id, long breakPointAddress) {
         update(id, "breakPointAddress", breakPointAddress);
     }
-
+    public void setSkipExecute(int id,boolean skipExecute){
+        update(id, "skipExecute", skipExecute);
+    }
     public void setCanStart(int id, boolean canStart) {
         update(id, "canStart", canStart);
     }

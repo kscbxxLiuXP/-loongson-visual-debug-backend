@@ -1,11 +1,14 @@
 package com.loongson.debug.resolver;
 
+import com.alibaba.fastjson.JSON;
 import com.loongson.debug.entity.Head;
 import com.loongson.debug.entity.TbBlock;
 import com.loongson.debug.service.ITbBlockService;
+import com.loongson.debug.util.FileOutputUtil;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 
@@ -68,13 +71,25 @@ public class OfflineResolver {
             System.out.println("TB块存入数据库");
             startTime = System.currentTimeMillis();   //获取开始时间
 
+//            BufferedWriter bufferedWriter = FileOutputUtil.getBufferedWriter("data/0414/tbBlocksAnalysis.txt");
+//
+//            tbBlocks.sort(new Comparator<TbBlock>() {
+//                @Override
+//                public int compare(TbBlock tbBlock, TbBlock t1) {
+//                    return t1.getIr2num()-tbBlock.getIr2num();
+//                }
+//            });
+//            for(int i=0;i<150;i++){
+//                TbBlock block = tbBlocks.get(i);
+//                bufferedWriter.write("["+block.getIr2num()+"]"+JSON.toJSONString(block.getIr2instr())+ "\n");
+//            }
             iTbBlockService.saveBatch(tbBlocks);
 
             endTime = System.currentTimeMillis(); //获取结束时间
             System.out.println("TB块存入数据库用时： " + (endTime - startTime) + "ms");
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return head;
     }

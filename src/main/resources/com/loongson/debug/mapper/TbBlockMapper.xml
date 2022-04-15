@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loongson.debug.mapper.TbBlockMapper">
-
+    <select id="getTbBlockContainAddress" resultType="com.loongson.debug.entity.TbBlock">
+        select * from tb_block where ltid=#{ltid} and IR2Instr like '%#{address}%' or IR1Instr like '%#{address}%'
+    </select>
 </mapper>

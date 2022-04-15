@@ -13,8 +13,8 @@ public class TraceItem {
     //id与tbindex相对应
     private int id;
 
-    private ArrayList<Integer> nextids;
-    private ArrayList<Integer> parents;
+    private ArrayList<String> nextids;
+    private ArrayList<String> parents;
     /**
      * 间接跳转目的地址，如果没有则为-1
      */
@@ -135,11 +135,11 @@ public class TraceItem {
         this.id = id;
     }
 
-    public ArrayList<Integer> getNextids() {
+    public ArrayList<String> getNextids() {
         return nextids;
     }
 
-    public void setNextids(ArrayList<Integer> nextids) {
+    public void setNextids(ArrayList<String> nextids) {
         this.nextids = nextids;
     }
 
@@ -167,11 +167,11 @@ public class TraceItem {
         this.tbaddress = tbaddress;
     }
 
-    public ArrayList<Integer> getParents() {
+    public ArrayList<String> getParents() {
         return parents;
     }
 
-    public void setParents(ArrayList<Integer> parents) {
+    public void setParents(ArrayList<String> parents) {
         this.parents = parents;
     }
 }

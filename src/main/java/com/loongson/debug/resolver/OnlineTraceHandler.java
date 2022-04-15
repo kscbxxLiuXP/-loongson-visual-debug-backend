@@ -43,11 +43,20 @@ public class OnlineTraceHandler {
         debugTraceDTO.setRegisters(convertRegister(registers));
         //设置间接跳转关系
         if (!onlineDebug.getPreviousTrace().equals("-1")) {
-            //设置当前Trace间接跳转信息
-            debugTraceDTO.setIndirectFrom(onlineDebug.getPreviousTrace());
-            //设置上一个Trace间接跳转信息
-            debugtraceService().setIndirectTo(debugid, onlineDebug.getPreviousTrace(), address);
-            //addressTraceItemMap.get(previousTrace).setIndirectTo(address);
+            if (onlineDebug.getSkipExecute()){
+                //由于跳过执行产生的间接跳转
+                debugTraceDTO.setSkipFrom(onlineDebug.getPreviousTrace());
+                //设置上一个Trace间接跳转信息
+                debugtraceService().setSkipTo(debugid, onlineDebug.getPreviousTrace(), address);
+            }else{
+                //真正的间接跳转
+                //设置当前Trace间接跳转信息
+                debugTraceDTO.setIndirectFrom(onlineDebug.getPreviousTrace());
+                //设置上一个Trace间接跳转信息
+                debugtraceService().setIndirectTo(debugid, onlineDebug.getPreviousTrace(), address);
+                //addressTraceItemMap.get(previousTrace).setIndirectTo(address);
+            }
+
 
         }
         if (exist) {

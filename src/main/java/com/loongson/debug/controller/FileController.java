@@ -46,7 +46,7 @@ public class FileController {
     @Autowired
     ResolveService resolveService;
     //文件存放地址
-    private static final String basicFilePath = "C:\\Users\\liuxp\\Documents\\毕设\\后端\\demo\\upload";
+    private static final String basicFilePath = "/home/liuxp/文档/毕设/后端/demo/upload";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping("/uploadTrace")

@@ -32,7 +32,7 @@ public class LtLogController {
         return returnRes;
     }
 
-    @GetMapping("/deleteltid")
+    @GetMapping("/deleteltlog")
     public String deleteLtlog(int ltid) {
         ltLogService.deleteLtLog(ltid);
         return "Success!";

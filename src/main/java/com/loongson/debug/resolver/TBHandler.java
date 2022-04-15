@@ -9,6 +9,8 @@ import com.loongson.debug.service.ITbBlockService;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TBHandler {
@@ -20,6 +22,7 @@ public class TBHandler {
     private boolean colorCorrection;
     private IR1Handler ir1Handler;
     private IR2Handler ir2Handler;
+    private final Pattern pattern = Pattern.compile("^\\[(\\d+), \\d+].*$");
 
     public TBHandler() {
         this.colorHandler = new ColorHandler();
@@ -98,8 +101,13 @@ public class TBHandler {
                 IR1 ir1 = ir1Handler.handle(line);
                 IR1Inst.add(ir1);
             } else if (line.startsWith("[") && line.charAt(1) != 'L') {
-                String s = line.split(",")[0].substring(1);
-                IR2Map.add(Integer.parseInt(s));
+                //正则匹配
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    String s = matcher.group(1);
+                    IR2Map.add(Integer.parseInt(s));
+                }
+
             } else if (line.startsWith("IR2[")) {
                 IR2 ir2 = ir2Handler.handle(line);
                 IR2Inst.add(ir2);

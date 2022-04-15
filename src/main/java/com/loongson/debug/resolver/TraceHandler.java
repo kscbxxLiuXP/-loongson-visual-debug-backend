@@ -109,13 +109,11 @@ public class TraceHandler {
                 String fromAddress = "0x" + line.substring(26, 34);
                 String toAddress = "0x" + line.substring(61, 69);
 
-                TraceItem fromTrace = addressTraceItemMap.get(fromAddress);
-                TraceItem toTrace = addressTraceItemMap.get(toAddress);
-                if (toTrace == null) {
+                if (!addressTraceItemMap.containsKey(toAddress)) {
                     System.out.println(fromAddress);
                 }
-                addressTraceItemMap.get(fromAddress).getNextids().add(toTrace.getId());
-                addressTraceItemMap.get(toAddress).getParents().add(fromTrace.getId());
+                addressTraceItemMap.get(fromAddress).getNextids().add(toAddress);
+                addressTraceItemMap.get(toAddress).getParents().add(fromAddress);
 
             }
         }

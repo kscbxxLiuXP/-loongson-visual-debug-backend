@@ -67,7 +67,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
             try {
                 webSocket.sendMessageTo(reply.toJSONString(), id);
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         responseObserver.onNext(Empty.newBuilder().build());
@@ -115,7 +115,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
         try {
             webSocket.sendMessageTo(reply.toJSONString(), request.getId());
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
@@ -141,7 +141,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
         try {
             webSocket.sendMessageTo(reply.toJSONString(), request.getId());
         } catch (Exception e) {
-            System.out.println(e);
+           e.printStackTrace();
         }
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
@@ -162,7 +162,7 @@ public class OnlineDebugServer extends DebugServiceGrpc.DebugServiceImplBase {
         try {
             webSocket.sendMessageTo(reply.toJSONString(), request.getId());
         } catch (Exception e) {
-            System.out.println(e);
+           e.printStackTrace();
         }
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
