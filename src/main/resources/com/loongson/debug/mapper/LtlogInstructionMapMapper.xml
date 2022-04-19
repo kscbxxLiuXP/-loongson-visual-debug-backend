@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loongson.debug.mapper.LtlogInstructionMapMapper">
+<!--    <update id="updateBatch" parameterType="java.util.List">-->
+<!--        update ltlog_instruction_map-->
+<!--        <trim prefix="set" suffixOverrides=",">-->
+<!--            <trim prefix="num = case" suffix="end,">-->
+<!--                <foreach collection="list" item="item" index="index">-->
+<!--                    <if test="item != null">-->
+<!--                        when ltid = #{item.ltid} and indexx = #{item.indexx}-->
+<!--                        then #{item.num}-->
+<!--                    </if>-->
+<!--                </foreach>-->
+<!--            </trim>-->
+<!--        </trim>-->
+<!--        where device_no in-->
+<!--        <foreach collection="devices" index="index" item="item" separator="," open="(" close=")">-->
+<!--            #{item.deviceNo}-->
+<!--        </foreach>-->
+<!--    </update>-->
+    <select id="">
+
+    </select>
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update ltlog_instruction_map
+            <set>
+                num=${item.num},
+            </set>
+            where ltid = ${item.ltid} and indexx = ${item.indexx}
+        </foreach>
+    </update>
+</mapper>
