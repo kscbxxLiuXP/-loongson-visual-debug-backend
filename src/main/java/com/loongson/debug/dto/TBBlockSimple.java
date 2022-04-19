@@ -2,6 +2,8 @@ package com.loongson.debug.dto;
 
 import com.loongson.debug.entity.TbBlock;
 
+import java.util.ArrayList;
+
 public class TBBlockSimple {
     private Integer tbindex;
     private String tbaddress;

@@ -6,6 +6,7 @@ import com.loongson.debug.entity.Head;
 import com.loongson.debug.entity.LtLog;
 import com.loongson.debug.entity.Trace;
 import com.loongson.debug.entity.User;
+import com.loongson.debug.resolver.ProfileHandler;
 import com.loongson.debug.resolver.TraceHandler;
 import com.loongson.debug.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,6 +27,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 public class FileController {
+
     @Autowired
     ITraceService traceService;
 
@@ -45,9 +45,43 @@ public class FileController {
 
     @Autowired
     ResolveService resolveService;
+
+    @Autowired
+    ILtLogAnalysisService ltLogAnalysisService;
+
+    @Autowired
+    private ITbAnalysisService tbAnalysisService;
+
+    @Autowired
+    private ILtlogInstructionMapService ltlogInstructionMapService;
+
     //文件存放地址
     private static final String basicFilePath = "/home/liuxp/文档/毕设/后端/demo/upload";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @PostMapping("/uploadProfile")
+    public Object uploadProfile(MultipartFile file, HttpServletRequest req, @RequestParam int ltid) throws IOException {
+        //保存文件
+        File folder = new File(basicFilePath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        UUID uuid = UUID.randomUUID();
+        String newName = uuid + ".profile";
+        File profileFile = new File(folder, newName);
+        file.transferTo(profileFile);
+
+        //解析Trace
+        ProfileHandler profileHandler = new ProfileHandler();
+        profileHandler.init(ltLogAnalysisService, tbAnalysisService, ltlogInstructionMapService,tbBlockService);
+        InputStream is = new FileInputStream(profileFile);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);
+        ArrayList<String> strings = profileHandler.handleT(br, ltid);
+
+
+        return strings;
+    }
 
     @PostMapping("/uploadTrace")
     public TraceDTO uploadTrace(MultipartFile file, HttpServletRequest req, @RequestParam int ltid) throws IOException {

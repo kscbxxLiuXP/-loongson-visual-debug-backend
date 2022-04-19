@@ -5,15 +5,17 @@ import com.loongson.debug.dto.TraceDTO;
 import com.loongson.debug.entity.IR1;
 import com.loongson.debug.entity.IR2;
 import com.loongson.debug.dto.TBBlockDTO;
+import com.loongson.debug.entity.LtlogAnalysis;
 import com.loongson.debug.entity.TbBlock;
 import com.loongson.debug.resolver.*;
 import com.loongson.debug.service.ITbBlockService;
-import com.loongson.debug.util.HexDecUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @SpringBootTest
 public class HandlerTest {
@@ -27,6 +29,8 @@ public class HandlerTest {
     TBHandler tbHandler = new TBHandler();
 
     TraceHandler traceHandler = new TraceHandler();
+
+    ProfileHandler profileHandler = new ProfileHandler();
 
     @Test
     void IR1HandlerTest() {
@@ -71,7 +75,7 @@ public class HandlerTest {
         InputStream is = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);
-        TbBlock tbBlockDto = tbHandler.handleT(br, 1, 1);
+        TbBlock tbBlockDto = tbHandler.handleT(br, 1, 1,new HashMap<>());
         System.out.println(tbBlockDto);
 
     }
@@ -94,6 +98,17 @@ public class HandlerTest {
         for (String s1 : split) {
             System.out.println(Long.parseLong(s1,16));
         }
+
+    }
+
+    @Test
+    void ProfileHnadlerTest() throws Exception {
+        File file = new File("data/0414/profile.log");
+        InputStream is = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);
+        ArrayList<String> strings = profileHandler.handleT(br, 8);
+        System.out.println(strings);
 
     }
 

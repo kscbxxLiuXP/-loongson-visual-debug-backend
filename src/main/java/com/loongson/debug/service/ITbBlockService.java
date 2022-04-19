@@ -5,6 +5,7 @@ import com.loongson.debug.dto.TraceItem;
 import com.loongson.debug.entity.TbBlock;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,4 +31,6 @@ public interface ITbBlockService extends IService<TbBlock> {
     List<TbBlock> getTbBlocksByAddresses(Set<String> addresses, int ltid);
 
     Map<String, TraceItem> getStringTbBlockTraceItemMap(int ltid);
+
+    Map<String, ArrayList<Integer>> getAddressInstructionsMap(int ltid);
 }

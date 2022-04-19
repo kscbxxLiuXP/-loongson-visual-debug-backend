@@ -35,6 +35,7 @@ public class TBBlockDTO {
     private ArrayList<IR1> IR1Instr;
     private ArrayList<IR2> IR2Instr;
     private ArrayList<Integer> IR2Map;
+    private ArrayList<Integer> instructions;
 
     //用于前端vo呈现
     private boolean expand = false;
@@ -175,9 +176,10 @@ public class TBBlockDTO {
         this.IR1Instr = (ArrayList<IR1>) JSON.parseArray(tbBlock.getIr1instr(), IR1.class);
         this.IR2Instr = (ArrayList<IR2>) JSON.parseArray(tbBlock.getIr2instr(), IR2.class);
         this.IR2Map = (ArrayList<Integer>) JSON.parseArray(tbBlock.getIr2map(), Integer.class);
+        this.instructions = (ArrayList<Integer>) JSON.parseArray(tbBlock.getInstructions(), Integer.class);
     }
 
-    public TBBlockDTO(int uid, int index, String TBAddress, String startAddressIR1, String endAddressIR1, String startAddressIR2, String endAddressIR2, int IR1Num, int IR2Num, ArrayList<IR1> IR1Instr, ArrayList<IR2> IR2Instr, ArrayList<Integer> IR2Map) {
+    public TBBlockDTO(int uid, int index, String TBAddress, String startAddressIR1, String endAddressIR1, String startAddressIR2, String endAddressIR2, int IR1Num, int IR2Num, ArrayList<IR1> IR1Instr, ArrayList<IR2> IR2Instr, ArrayList<Integer> IR2Map, ArrayList<Integer> instructions) {
         this.uid = uid;
         this.tbindex = index;
         this.TBAddress = TBAddress;
@@ -190,6 +192,7 @@ public class TBBlockDTO {
         this.IR1Instr = IR1Instr;
         this.IR2Instr = IR2Instr;
         this.IR2Map = IR2Map;
+        this.instructions = instructions;
     }
 
     @Override

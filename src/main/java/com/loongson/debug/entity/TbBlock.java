@@ -55,7 +55,9 @@ public class TbBlock implements Serializable {
     @TableField("IR2Map")
     private String ir2map;
 
-    public TbBlock(Integer ltid, Integer tbindex, String tbaddress, String startaddressir1, String endaddressir1, String startaddressir2, String endaddressir2, Integer ir1num, Integer ir2num, String ir1instr, String ir2instr, String ir2map) {
+    private String instructions;
+
+    public TbBlock(Integer ltid, Integer tbindex, String tbaddress, String startaddressir1, String endaddressir1, String startaddressir2, String endaddressir2, Integer ir1num, Integer ir2num, String ir1instr, String ir2instr, String ir2map, String instructions) {
         this.ltid = ltid;
         this.tbindex = tbindex;
         this.tbaddress = tbaddress;
@@ -68,9 +70,18 @@ public class TbBlock implements Serializable {
         this.ir1instr = ir1instr;
         this.ir2instr = ir2instr;
         this.ir2map = ir2map;
+        this.instructions = instructions;
     }
 
     public TbBlock() {
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
     public Integer getUid() {

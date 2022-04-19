@@ -178,12 +178,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    //FIXME type代表什么
     public List<SearchResultDTO> searchInstruction(int type, int ltid, String instruction, boolean skipHead) {
+
+        //type 1
         List<SearchResultDTO> searchResults = new ArrayList<>();
         if (!skipHead) {
             Head head = headService.getHeadById(ltid);
         }
-        List<TbBlock> tbBlocks = tbBlockService.getTbBlocks(ltid);
+
+        QueryWrapper<TbBlock> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ltid", ltid).like("IR1Instr", instruction).or().like("IR2Instr", instruction);
+        List<TbBlock> tbBlocks = tbBlockService.list(queryWrapper);
         int snum = 1;
         TBBlockDTO tbBlockDTO = null;
         for (TbBlock tbBlock : tbBlocks) {

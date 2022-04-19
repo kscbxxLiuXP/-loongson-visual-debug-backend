@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true"
+    url: "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowMultiQueries=true"
     username: "liuxp"
     password: "LiuXinPeng35"
   #    url: "jdbc:mysql://101.132.136.73:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true"
@@ -15,4 +15,4 @@ server:
   port: 8000
 #logging:
 #  level:
-#    com.loongson.demo.mapper: debug
+#    com.loongson.debug.mapper: debug

@@ -1,5 +1,6 @@
 package com.loongson.debug.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,10 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -36,6 +34,18 @@ public class TbBlockServiceImpl extends ServiceImpl<TbBlockMapper, TbBlock> impl
         queryWrapper.eq("ltid", ltid);
         List list = tbBlockMapper.selectList(queryWrapper);
         return list;
+    }
+
+    @Override
+    public Map<String, ArrayList<Integer>> getAddressInstructionsMap(int ltid) {
+        QueryWrapper<TbBlock> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("startAddressIR1", "instructions").eq("ltid", ltid);
+        List<TbBlock> tbBlocks = tbBlockMapper.selectList(queryWrapper);
+        Map<String, ArrayList<Integer>> addressInstructionsMap = new HashMap<>();
+        for (TbBlock tbBlock : tbBlocks) {
+            addressInstructionsMap.put(tbBlock.getStartaddressir1(), (ArrayList<Integer>) JSONObject.parseArray(tbBlock.getInstructions(), Integer.class));
+        }
+        return addressInstructionsMap;
     }
 
     @Override

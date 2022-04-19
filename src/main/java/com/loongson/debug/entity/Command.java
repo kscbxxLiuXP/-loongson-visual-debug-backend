@@ -35,6 +35,10 @@ public class Command {
                 '}';
     }
 
+    public String toStingSimple() {
+        return operator + " " + operand;
+    }
+
     public String getOperator() {
         return operator;
     }

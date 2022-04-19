@@ -13,10 +13,10 @@ public class DemoApplication {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(DemoApplication.class, args);
-        Server server = ServerBuilder.forPort(50071)
-                .addService(new OnlineDebugServer())
-                .build();
-        server.start();
+//        Server server = ServerBuilder.forPort(50071)
+//                .addService(new OnlineDebugServer())
+//                .build();
+//        server.start();
     }
 
 }
