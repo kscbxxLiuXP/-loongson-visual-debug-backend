@@ -28,15 +28,33 @@ public class LtlogInstructionMapController {
     ILtlogInstructionMapService ltlogInstructionMapService;
 
     @GetMapping("/getAll")
-    public HashMap<String, Object> getLtlogInstructionMaps(int ltid, int currentPage, int limit) {
-        IPage<LtlogInstructionMap> ltlogInstructionMapIPage = ltlogInstructionMapService.selectByPage(ltid, currentPage, limit);
+    public HashMap<String, Object> getLtlogInstructionMaps(String operator,String order,int ltid, int currentPage, int limit) {
+        IPage<LtlogInstructionMap> ltlogInstructionMapIPage = ltlogInstructionMapService.selectByPage(operator,order,ltid, currentPage, limit);
         List<LtlogInstructionMap> ltlogInstructionMapList = ltlogInstructionMapIPage.getRecords();
         long pages = ltlogInstructionMapIPage.getPages();
 
         HashMap<String, Object> returnRes = new HashMap<>();
         returnRes.put("records", ltlogInstructionMapList);
         returnRes.put("total", ltlogInstructionMapIPage.getTotal());
+        returnRes.put("sum", ltlogInstructionMapList.get(0).getSum());
         returnRes.put("pages", pages);
         return returnRes;
+    }
+
+    @GetMapping("/getCombo")
+
+    public List<LtlogInstructionMap> getLtlogInstructionMapsComboed(int ltid) {
+
+        return ltlogInstructionMapService.getLtlogInstructionMapsComboed(ltid);
+    }
+
+    @GetMapping("/getChart")
+    public List<LtlogInstructionMap> getChartData(int ltid) {
+        return ltlogInstructionMapService.getChartData(ltid);
+    }
+
+    @GetMapping("/getInstructionTypes")
+    public List<String> getInstructionTypes(int ltid){
+        return ltlogInstructionMapService.getInstructionTypes(ltid);
     }
 }

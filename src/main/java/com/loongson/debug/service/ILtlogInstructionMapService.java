@@ -16,6 +16,11 @@ import java.util.List;
  * @since 2022-04-18
  */
 public interface ILtlogInstructionMapService extends IService<LtlogInstructionMap> {
-    void updateBatch(List<LtlogInstructionMap> ltlogInstructionMapList);
-    IPage<LtlogInstructionMap> selectByPage(int ltid, int currentPage, int limit);
+
+    IPage<LtlogInstructionMap> selectByPage(String operator,String order,int ltid, int currentPage, int limit);
+    List<LtlogInstructionMap> getLtlogInstructionMapsComboed( int ltid);
+
+    List<LtlogInstructionMap> getChartData(int ltid);
+
+    List<String> getInstructionTypes(int ltid);
 }

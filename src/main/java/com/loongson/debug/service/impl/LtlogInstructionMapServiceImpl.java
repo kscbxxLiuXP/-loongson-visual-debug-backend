@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,16 +28,47 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
 
 
     @Override
-    public void updateBatch(List<LtlogInstructionMap> ltlogInstructionMapList) {
-            ltlogInstructionMapMapper.updateBatch(ltlogInstructionMapList);
+    public IPage<LtlogInstructionMap> selectByPage(String operator, String order, int ltid, int currentPage, int limit) {
+        QueryWrapper<LtlogInstructionMap> wrapper = new QueryWrapper<>();
+        wrapper.eq("ltid", ltid);
+        if (order.equals("asc")) {
+            wrapper.orderByAsc("num");
+        } else {
+            wrapper.orderByDesc("num");
+        }
+        if (operator != "") {
+            wrapper.eq("operator", operator);
+        }
+        Page<LtlogInstructionMap> page = new Page<>(currentPage, limit);
+        IPage<LtlogInstructionMap> IPage = ltlogInstructionMapMapper.selectPage(page, wrapper);
+        wrapper.select("sum(num) as sum");
+        LtlogInstructionMap ltlogInstructionMap = ltlogInstructionMapMapper.selectOne(wrapper);
+        IPage.getRecords().get(0).setSum(ltlogInstructionMap.getSum());
+        return IPage;
     }
 
     @Override
-    public IPage<LtlogInstructionMap> selectByPage(int ltid, int currentPage, int limit) {
+    public List<LtlogInstructionMap> getLtlogInstructionMapsComboed(int ltid) {
+        return ltlogInstructionMapMapper.getLtlogInstructionMapsComboed(ltid);
+    }
+
+    @Override
+    public List<LtlogInstructionMap> getChartData(int ltid) {
         QueryWrapper<LtlogInstructionMap> wrapper = new QueryWrapper<>();
-        wrapper.eq("ltid", ltid).orderByDesc("num");
-        Page<LtlogInstructionMap> page = new Page<>(currentPage, limit);
-        IPage<LtlogInstructionMap> IPage = ltlogInstructionMapMapper.selectPage(page, wrapper);
-        return IPage;
+        wrapper.select("operator", "operand", "num").eq("ltid", ltid).orderByDesc("num");
+        return ltlogInstructionMapMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<String> getInstructionTypes(int ltid) {
+        ArrayList<String> instructionTypes = new ArrayList<>();
+        QueryWrapper<LtlogInstructionMap> wrapper = new QueryWrapper<>();
+        wrapper.select("operator").groupBy("operator");
+        List<LtlogInstructionMap> ltlogInstructionMapList = ltlogInstructionMapMapper.selectList(wrapper);
+        for (LtlogInstructionMap ltlogInstructionMap : ltlogInstructionMapList) {
+            instructionTypes.add(ltlogInstructionMap.getOperator());
+        }
+
+        return instructionTypes;
     }
 }

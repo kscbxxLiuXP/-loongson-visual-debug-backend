@@ -16,5 +16,5 @@ import java.util.List;
  */
 @Mapper
 public interface LtlogInstructionMapMapper extends BaseMapper<LtlogInstructionMap> {
-    void updateBatch(List<LtlogInstructionMap> ltlogInstructionMapList);
+    List<LtlogInstructionMap> getLtlogInstructionMapsComboed( int ltid);
  }
