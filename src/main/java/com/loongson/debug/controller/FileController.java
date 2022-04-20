@@ -6,6 +6,7 @@ import com.loongson.debug.entity.Head;
 import com.loongson.debug.entity.LtLog;
 import com.loongson.debug.entity.Trace;
 import com.loongson.debug.entity.User;
+import com.loongson.debug.helper.UploadAddressFactory;
 import com.loongson.debug.resolver.ProfileHandler;
 import com.loongson.debug.resolver.TraceHandler;
 import com.loongson.debug.service.*;
@@ -56,7 +57,7 @@ public class FileController {
     private ILtlogInstructionMapService ltlogInstructionMapService;
 
     //文件存放地址
-    private static final String basicFilePath = "/home/liuxp/文档/毕设/后端/demo/upload";
+    private static final String basicFilePath = UploadAddressFactory.getInstance().getUploadAddress();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping("/uploadProfile")
@@ -73,13 +74,13 @@ public class FileController {
 
         //解析Trace
         ProfileHandler profileHandler = new ProfileHandler();
-        profileHandler.init(ltLogAnalysisService, tbAnalysisService, ltlogInstructionMapService,tbBlockService);
+        profileHandler.init(ltLogAnalysisService, tbAnalysisService, ltlogInstructionMapService, tbBlockService);
         InputStream is = new FileInputStream(profileFile);
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);
         ArrayList<String> strings = profileHandler.handleT(br, ltid);
 
-
+        profileFile.delete();
         return strings;
     }
 

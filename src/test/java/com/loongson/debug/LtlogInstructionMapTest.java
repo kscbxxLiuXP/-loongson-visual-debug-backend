@@ -41,7 +41,6 @@ public class LtlogInstructionMapTest {
         }
 
         ltlogInstructionMapService.updateBatchById(updateLtlogInstructionList);
-        ltlogInstructionMapService.updateBatch(updateLtlogInstructionList);
 
     }
     @Test

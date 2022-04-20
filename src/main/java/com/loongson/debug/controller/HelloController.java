@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class TestController {
-
+public class HelloController {
     @GetMapping("/hello")
-    public String hello() {
-        return "Hello World";
+    public String helloWorld() {
+        return "Hello, welcome!\n If you see this line of word, the service is on running ";
     }
-
 }

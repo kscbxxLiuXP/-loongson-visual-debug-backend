@@ -25,7 +25,6 @@ public class GlobalDebugMaintainer {
         if (instance == null) {
             instance = new GlobalDebugMaintainer();
             cache = new HashMap<>();
-
         }
         return instance;
     }
