@@ -43,7 +43,15 @@ docker build -t loongson-visual-debug-backend .
 
 2. 运行
 ```shell
+#后台运行
 docker run -d \
+    -p 8000:8000 \
+    -p 50071:50071 \
+    --name visual-debug-backend \
+    loongson-visual-debug-backend
+    
+#前台运行
+docker run -it \
     -p 8000:8000 \
     -p 50071:50071 \
     --name visual-debug-backend \
