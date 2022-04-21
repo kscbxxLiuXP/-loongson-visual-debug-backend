@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM maven
+FROM maven:3.8.5-openjdk-8-slim
 
 MAINTAINER liuxinpeng "kscbxxLiuXP@126.com"
 
