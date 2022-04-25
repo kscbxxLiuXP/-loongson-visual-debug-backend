@@ -17,5 +17,12 @@ WORKDIR /app
 # Create jar file
 RUN mvn clean package -Dmaven.test.skip=true
 
+
+FROM openjdk:8-jdk-alpine
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]
+
 # Run the jar file
 ENTRYPOINT ["java","-jar","/app/target/LoongsonVisualDebug-1.0-SNAPSHOT.jar","upload=/app/upload"]
