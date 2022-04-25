@@ -179,10 +179,8 @@ public class ProfileHandler {
         ArrayList<LtlogInstructionMap> updateLtlogInstructionList = new ArrayList<>();
         for (Map.Entry<Integer, Long> entry : instructionNums.entrySet()) {
             LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
-            String id = String.valueOf(ltid)+"-"+String.valueOf(entry.getKey());
+            String id = ltid +"-"+ entry.getKey();
             ltlogInstructionMap.setUid(id);
-            ltlogInstructionMap.setLtid(ltid);
-            ltlogInstructionMap.setIndexx(entry.getKey());
 
             ltlogInstructionMap.setNum(entry.getValue());
             updateLtlogInstructionList.add(ltlogInstructionMap);

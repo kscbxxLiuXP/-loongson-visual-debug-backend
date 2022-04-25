@@ -54,7 +54,7 @@ public class TraceHandler {
         while ((line = br.readLine()) != null) {
             //映射头
             if (line.startsWith("Trace")) {
-                Map<String, String> registers = new HashMap<>();
+
                 //文本分割的方式获取
                 //String[] split = line.split(" ");
                 //String[] split2 = split[3].split("/");
@@ -70,17 +70,6 @@ public class TraceHandler {
                     addressTraceItemMap.get(address).setTbtype(type);
                 }
 
-                //第一行寄存器信息 [EAX ~ EDX]
-                line = br.readLine();
-                registers.putAll(getRegisterInfo(line, 4));
-
-                //第二行寄存器信息 [ESI ~ EDI]
-                line = br.readLine();
-                registers.putAll(getRegisterInfo(line, 4));
-
-                //第三行寄存器信息 [EIP ~ EFL]
-                line = br.readLine();
-                registers.putAll(getRegisterInfo(line, 2));
 
                 //上一个解析单元也是Trace
                 if (!previousTrace.equals("-1")) {
@@ -91,10 +80,6 @@ public class TraceHandler {
                     addressTraceItemMap.get(previousTrace).setIndirectTo(address);
 
                 }
-
-                //设置TraceItem的寄存器状态
-                addressTraceItemMap.get(address).setRegisters(registers);
-
 
                 previousTrace = address;
 
@@ -115,10 +100,24 @@ public class TraceHandler {
                 addressTraceItemMap.get(fromAddress).getNextids().add(toAddress);
                 addressTraceItemMap.get(toAddress).getParents().add(fromAddress);
 
+            } else if (line.startsWith("EAX")) {
+                Map<String, String> registers = new HashMap<>();
+                //第一行寄存器信息 [EAX ~ EDX]
+                registers.putAll(getRegisterInfo(line, 4));
+
+                //第二行寄存器信息 [ESI ~ EDI]
+                line = br.readLine();
+                registers.putAll(getRegisterInfo(line, 4));
+
+                //第三行寄存器信息 [EIP ~ EFL]
+                line = br.readLine();
+                registers.putAll(getRegisterInfo(line, 2));
+                //设置TraceItem的寄存器状态
+                addressTraceItemMap.get(previousTrace).setRegisters(registers);
             }
         }
         //将map转化成list
-        ArrayList<TraceItem> list = new ArrayList<>(addressTraceItemMap.values()) ;
+        ArrayList<TraceItem> list = new ArrayList<>(addressTraceItemMap.values());
 
         list.sort(new MapKeyComparator());
         for (TraceItem traceItem : list) {

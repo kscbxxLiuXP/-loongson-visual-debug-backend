@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,23 +29,38 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
 
 
     @Override
-    public IPage<LtlogInstructionMap> selectByPage(String operator, String order, int ltid, int currentPage, int limit) {
+    public HashMap<String, Object> selectByPage(String operator, String orderby, String order, int ltid, int currentPage, int limit) {
         QueryWrapper<LtlogInstructionMap> wrapper = new QueryWrapper<>();
+        QueryWrapper<LtlogInstructionMap> wrapper2= new QueryWrapper<>();
+        wrapper.select("*, num * ir2num as ir2execute");
+        wrapper2.eq("ltid",ltid);
         wrapper.eq("ltid", ltid);
         if (order.equals("asc")) {
-            wrapper.orderByAsc("num");
+            wrapper.orderByAsc(orderby);
         } else {
-            wrapper.orderByDesc("num");
+            wrapper.orderByDesc(orderby);
         }
         if (operator != "") {
             wrapper.eq("operator", operator);
+            wrapper2.eq("operator",operator);
         }
         Page<LtlogInstructionMap> page = new Page<>(currentPage, limit);
         IPage<LtlogInstructionMap> IPage = ltlogInstructionMapMapper.selectPage(page, wrapper);
-        wrapper.select("sum(num) as sum");
-        LtlogInstructionMap ltlogInstructionMap = ltlogInstructionMapMapper.selectOne(wrapper);
-        IPage.getRecords().get(0).setSum(ltlogInstructionMap.getSum());
-        return IPage;
+
+
+        wrapper2.select("sum(num) as sumir1, sum(num*ir2num) as sumir2");
+        LtlogInstructionMap ltlogInstructionMap = ltlogInstructionMapMapper.selectOne(wrapper2);
+
+        List<LtlogInstructionMap> ltlogInstructionMapList = IPage.getRecords();
+        long pages = IPage.getPages();
+
+        HashMap<String, Object> returnRes = new HashMap<>();
+        returnRes.put("records", ltlogInstructionMapList);
+        returnRes.put("total", IPage.getTotal());
+        returnRes.put("sumir1", ltlogInstructionMap.getSumir1());
+        returnRes.put("sumir2", ltlogInstructionMap.getSumir2());
+        returnRes.put("pages", pages);
+        return returnRes;
     }
 
     @Override

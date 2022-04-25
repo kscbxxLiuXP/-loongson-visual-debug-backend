@@ -30,19 +30,60 @@ public class LtlogInstructionMap implements Serializable {
 
     private String operand;
 
+    private String pattern;
+
+
     private String ir2instruction;
 
+    private Integer ir2num;
+
+    //irexecute
     private Long num;
 
-    private transient long sum;
+    private transient Long ir2execute;
+    private transient Long sumir1;
+    private transient Long sumir2;
 
-    public long getSum() {
-        return sum;
+    public String getPattern() {
+        return pattern;
     }
 
-    public void setSum(long sum) {
-        this.sum = sum;
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
+
+    public Long getIr2execute() {
+        return ir2execute;
+    }
+
+    public void setIr2execute(Long ir2execute) {
+        this.ir2execute = ir2execute;
+    }
+
+    public Long getSumir1() {
+        return sumir1;
+    }
+
+    public void setSumir1(Long sumir1) {
+        this.sumir1 = sumir1;
+    }
+
+    public Long getSumir2() {
+        return sumir2;
+    }
+
+    public void setSumir2(Long sumir2) {
+        this.sumir2 = sumir2;
+    }
+
+    public Integer getIr2num() {
+        return ir2num;
+    }
+
+    public void setIr2num(Integer ir2num) {
+        this.ir2num = ir2num;
+    }
+
 
     public void numIncrease() {
         this.num++;
@@ -107,13 +148,14 @@ public class LtlogInstructionMap implements Serializable {
     @Override
     public String toString() {
         return "LtlogInstructionMap{" +
-                "uid=" + uid +
+                "uid='" + uid + '\'' +
                 ", ltid=" + ltid +
                 ", indexx=" + indexx +
-                ", operator=" + operator +
-                ", operand=" + operand +
-                ", ir2instruction=" + ir2instruction +
+                ", operator='" + operator + '\'' +
+                ", operand='" + operand + '\'' +
+                ", ir2instruction='" + ir2instruction + '\'' +
+                ", ir2num=" + ir2num +
                 ", num=" + num +
-                "}";
+                '}';
     }
 }

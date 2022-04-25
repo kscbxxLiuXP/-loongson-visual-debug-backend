@@ -1,6 +1,8 @@
 package com.loongson.debug;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.loongson.debug.entity.LtlogInstructionMap;
+import com.loongson.debug.resolver.OperandHandler;
 import com.loongson.debug.service.ILtlogInstructionMapService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LtlogInstructionMapTest {
     @Autowired
     ILtlogInstructionMapService ltlogInstructionMapService;
@@ -43,6 +46,7 @@ public class LtlogInstructionMapTest {
         ltlogInstructionMapService.updateBatchById(updateLtlogInstructionList);
 
     }
+
     @Test
     void jdbcTest() throws SQLException {
         long begin = System.currentTimeMillis();
@@ -102,5 +106,32 @@ public class LtlogInstructionMapTest {
         Long end = System.currentTimeMillis();
         // 耗时
         System.out.println("总计单条循环更新" + count + "条，共计耗时" + (end - begin) / 1000 + "秒");
+    }
+
+    @Test
+    void updateTest() {
+        LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
+
+        ltlogInstructionMap.setUid("23-7340");
+        ltlogInstructionMap.setLtid(23);
+        ltlogInstructionMap.setNum(15L);
+        System.out.println(ltlogInstructionMap);
+
+        ltlogInstructionMapService.updateById(ltlogInstructionMap);
+    }
+    @Test
+    void selectTest(){
+        HashMap<String, Object> map = ltlogInstructionMapService.selectByPage("", "num", "", 23, 1, 10);
+        System.out.println(map);
+    }
+
+    @Test
+    void testPattern(){
+        OperandHandler operandHandler = new OperandHandler();
+        List<LtlogInstructionMap> ltlogInstructionMaps = ltlogInstructionMapService.list(new QueryWrapper<LtlogInstructionMap>().eq("ltid", 23));
+        for (LtlogInstructionMap ltlogInstructionMap : ltlogInstructionMaps) {
+            String operand = ltlogInstructionMap.getOperand();
+            System.out.println(operand+"\t"+ operandHandler.pattern(operand));
+        }
     }
 }

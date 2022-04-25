@@ -47,6 +47,7 @@ public class TBHandler {
 
 
     public TbBlock handleT(BufferedReader br, int index, int ltid, Map<String, LtlogInstructionMap> map) throws IOException {
+        OperandHandler operandHandler = new OperandHandler();
         String TBAddress = "";
         String startAddressIR1 = "";
         String endAddressIR1 = "";
@@ -111,14 +112,17 @@ public class TBHandler {
                 instructions.add(map.get(key).getIndexx());
             } else {
                 LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
-                int indexx=map.size() + 1;
-                String id = String.valueOf(ltid)+"-"+String.valueOf(indexx);
+                int indexx = map.size() + 1;
+                String id = ltid + "-" + indexx;
                 ltlogInstructionMap.setUid(id);
                 ltlogInstructionMap.setIndexx(indexx);
                 ltlogInstructionMap.setLtid(ltid);
 
                 ltlogInstructionMap.setOperator(ir1.getInstruction().getOperator());
                 ltlogInstructionMap.setOperand(ir1.getInstruction().getOperand());
+                String operandPattern = operandHandler.pattern(ltlogInstructionMap.getOperand());
+                ltlogInstructionMap.setPattern(operandPattern);
+
                 ltlogInstructionMap.setNum(1L);
                 int startid = IR2Map.get(i);
                 int endid = IR2Map.get(i + 1);
@@ -129,6 +133,7 @@ public class TBHandler {
                     }
                 }
                 ltlogInstructionMap.setIr2instruction(JSON.toJSONString(ir1MapIR2));
+                ltlogInstructionMap.setIr2num(ir1MapIR2.size());
                 instructions.add(map.size() + 1);
                 map.put(key, ltlogInstructionMap);
             }

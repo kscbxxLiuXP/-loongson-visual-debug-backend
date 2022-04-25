@@ -5,11 +5,12 @@ import com.loongson.debug.entity.LtlogInstructionMap;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.loongson.debug.entity.TBAnalysis;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author liuxp
@@ -17,8 +18,9 @@ import java.util.List;
  */
 public interface ILtlogInstructionMapService extends IService<LtlogInstructionMap> {
 
-    IPage<LtlogInstructionMap> selectByPage(String operator,String order,int ltid, int currentPage, int limit);
-    List<LtlogInstructionMap> getLtlogInstructionMapsComboed( int ltid);
+    HashMap<String, Object> selectByPage(String operator, String orderby, String order, int ltid, int currentPage, int limit);
+
+    List<LtlogInstructionMap> getLtlogInstructionMapsComboed(int ltid);
 
     List<LtlogInstructionMap> getChartData(int ltid);
 

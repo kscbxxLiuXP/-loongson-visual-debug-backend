@@ -9,15 +9,15 @@ import java.util.Collections;
 public class CodeGenerator {
     public static void main(String[] args) {
         //sql相关
-        String JDBCUrl = "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
+        String JDBCUrl = "jdbc:mysql://***:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
         String username = "liuxp";
-        String password = "LiuXinPeng35";
+        String password = "";
 
         //导出数据库表设置
         String exportTables = "lt_log_analysis";//用,隔开
 
         //包名
-        String parentPackage = "com.loongson.debug1";
+        String parentPackage = "com.loongson.debug";
         String moduleName = "";
 
         //生成的路径名
