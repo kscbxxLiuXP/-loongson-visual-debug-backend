@@ -55,6 +55,8 @@ public class FileController {
 
     @Autowired
     private ILtlogInstructionMapService ltlogInstructionMapService;
+    @Autowired
+    private ILtlogInstructionPatternService ltlogInstructionPatternService;
 
     //文件存放地址
     private static final String basicFilePath = UploadAddressFactory.getInstance().getUploadAddress();
@@ -74,7 +76,7 @@ public class FileController {
 
         //解析Trace
         ProfileHandler profileHandler = new ProfileHandler();
-        profileHandler.init(ltLogAnalysisService, tbAnalysisService, ltlogInstructionMapService, tbBlockService);
+        profileHandler.init(ltLogAnalysisService, tbAnalysisService, ltlogInstructionMapService, tbBlockService,ltlogInstructionPatternService);
         InputStream is = new FileInputStream(profileFile);
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);

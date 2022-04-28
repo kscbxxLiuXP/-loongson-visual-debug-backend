@@ -35,14 +35,45 @@ public class LtlogInstructionMap implements Serializable {
 
     private String ir2instruction;
 
+    //ir2instruction中的个数
     private Integer ir2num;
 
-    //irexecute
-    private Long num;
+    //ir1execute即TB块执行的次数
+    private Long ir1execute;
+    //ir2execute = ir1execute * ir2num
+    private  Long ir2execute;
+    //所有ir1的执行次数,最终总计
+    private  Long sumir1;
+    //所有ir2的执行次数，最终总计
+    private  Long sumir2;
 
-    private transient Long ir2execute;
-    private transient Long sumir1;
-    private transient Long sumir2;
+    public LtlogInstructionMap() {
+    }public LtlogInstructionMap(LtlogInstructionPattern ltlogInstructionPattern) {
+        this.operator = ltlogInstructionPattern.getOperator();
+        this.operand = ltlogInstructionPattern.getOperand();
+        this.pattern = ltlogInstructionPattern.getPattern();
+        this.ir2instruction = ltlogInstructionPattern.getIr2instruction();
+        this.ir2num = ltlogInstructionPattern.getIr2num();
+        this.ir1execute = ltlogInstructionPattern.getIr1execute();
+        this.ir2execute = ltlogInstructionPattern.getIr2execute();
+        this.sumir1 = ltlogInstructionPattern.getSumir1all();
+        this.sumir2 = ltlogInstructionPattern.getSumir2all();
+    }
+
+    public LtlogInstructionMap(String uid, Integer ltid, Integer indexx, String operator, String operand, String pattern, String ir2instruction, Integer ir2num, Long ir1execute, Long ir2execute, Long sumir1, Long sumir2) {
+        this.uid = uid;
+        this.ltid = ltid;
+        this.indexx = indexx;
+        this.operator = operator;
+        this.operand = operand;
+        this.pattern = pattern;
+        this.ir2instruction = ir2instruction;
+        this.ir2num = ir2num;
+        this.ir1execute = ir1execute;
+        this.ir2execute = ir2execute;
+        this.sumir1 = sumir1;
+        this.sumir2 = sumir2;
+    }
 
     public String getPattern() {
         return pattern;
@@ -82,11 +113,6 @@ public class LtlogInstructionMap implements Serializable {
 
     public void setIr2num(Integer ir2num) {
         this.ir2num = ir2num;
-    }
-
-
-    public void numIncrease() {
-        this.num++;
     }
 
     public String getUid() {
@@ -137,12 +163,12 @@ public class LtlogInstructionMap implements Serializable {
         this.ir2instruction = ir2instruction;
     }
 
-    public Long getNum() {
-        return num;
+    public Long getIr1execute() {
+        return ir1execute;
     }
 
-    public void setNum(Long num) {
-        this.num = num;
+    public void setIr1execute(Long ir1execute) {
+        this.ir1execute = ir1execute;
     }
 
     @Override
@@ -153,9 +179,13 @@ public class LtlogInstructionMap implements Serializable {
                 ", indexx=" + indexx +
                 ", operator='" + operator + '\'' +
                 ", operand='" + operand + '\'' +
+                ", pattern='" + pattern + '\'' +
                 ", ir2instruction='" + ir2instruction + '\'' +
                 ", ir2num=" + ir2num +
-                ", num=" + num +
+                ", ir1execute=" + ir1execute +
+                ", ir2execute=" + ir2execute +
+                ", sumir1=" + sumir1 +
+                ", sumir2=" + sumir2 +
                 '}';
     }
 }

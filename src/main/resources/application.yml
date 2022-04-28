@@ -1,16 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowMultiQueries=true"
+    url: "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowMultiQueries=true&useAffectedRows=true"
     username: "liuxp"
     password: "LiuXinPeng35"
-  #    url: "jdbc:mysql://101.132.136.73:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true"
-  #    username: "root"
-  #    password: "f7zhZt6+YbW30PLf"
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 server:
   port: 8000
 #logging:

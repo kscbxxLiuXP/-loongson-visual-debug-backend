@@ -1,13 +1,15 @@
 package com.loongson.debug.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.loongson.debug.dto.LtlogInstructionMapDTO;
+import com.loongson.debug.dto.PatternDTO;
+import com.loongson.debug.dto.QueryInstructionAllDTO;
 import com.loongson.debug.entity.LtlogInstructionMap;
+import com.loongson.debug.entity.LtlogInstructionPattern;
 import com.loongson.debug.service.ILtlogInstructionMapService;
+import com.loongson.debug.service.ILtlogInstructionPatternService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,17 +28,35 @@ import java.util.List;
 public class LtlogInstructionMapController {
     @Autowired
     ILtlogInstructionMapService ltlogInstructionMapService;
+    @Autowired
+    ILtlogInstructionPatternService ltlogInstructionPatternService;
 
-    @GetMapping("/getAll")
-    public HashMap<String, Object> getLtlogInstructionMaps(String operator,String orderby,String order,int ltid, int currentPage, int limit) {
+    @GetMapping("/getPatterns")
+    public List<LtlogInstructionPattern> getPatterns(int ltid) {
+        return ltlogInstructionPatternService.getPatterns(ltid);
+
+    }
+
+    @PostMapping("/getAll")
+    public HashMap<String, Object> getLtlogInstructionMapsAll(@RequestBody QueryInstructionAllDTO queryInstructionAllDTO) {
+        return ltlogInstructionMapService.getLtlogInstructionMapsAll(queryInstructionAllDTO);
+    }
+
+    @PostMapping("/getAllPatterned")
+    public HashMap<String, Object> getLtlogInstructionMapsAllPatterned(@RequestBody QueryInstructionAllDTO queryInstructionAllDTO) {
+        return ltlogInstructionMapService.getLtlogInstructionMapsAllPatterned(queryInstructionAllDTO);
+    }
+
+    @GetMapping("/getAll1")
+    public HashMap<String, Object> getLtlogInstructionMaps(String operator, String orderby, String order, int ltid, int currentPage, int limit) {
 
 
-        return  ltlogInstructionMapService.selectByPage(operator,orderby,order,ltid, currentPage, limit);
+        return ltlogInstructionMapService.selectByPage(operator, orderby, order, ltid, currentPage, limit);
     }
 
     @GetMapping("/getCombo")
 
-    public List<LtlogInstructionMap> getLtlogInstructionMapsComboed(int ltid) {
+    public List<LtlogInstructionPattern> getLtlogInstructionMapsComboed(int ltid) {
 
         return ltlogInstructionMapService.getLtlogInstructionMapsComboed(ltid);
     }
@@ -47,7 +67,7 @@ public class LtlogInstructionMapController {
     }
 
     @GetMapping("/getInstructionTypes")
-    public List<String> getInstructionTypes(int ltid){
+    public List<String> getInstructionTypes(int ltid) {
         return ltlogInstructionMapService.getInstructionTypes(ltid);
     }
 }

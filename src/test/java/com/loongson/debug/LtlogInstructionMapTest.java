@@ -1,7 +1,10 @@
 package com.loongson.debug;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.loongson.debug.controller.LtlogInstructionMapController;
+import com.loongson.debug.dto.LtlogInstructionMapDTO;
 import com.loongson.debug.entity.LtlogInstructionMap;
+import com.loongson.debug.mapper.LtlogInstructionMapMapper;
 import com.loongson.debug.resolver.OperandHandler;
 import com.loongson.debug.service.ILtlogInstructionMapService;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,8 @@ public class LtlogInstructionMapTest {
     @Autowired
     ILtlogInstructionMapService ltlogInstructionMapService;
 
+    @Autowired
+    LtlogInstructionMapMapper ltlogInstructionMapMapper;
     @Test
     void test() {
         ArrayList<LtlogInstructionMap> updateLtlogInstructionList = new ArrayList<>();
@@ -39,7 +44,7 @@ public class LtlogInstructionMapTest {
             LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
             ltlogInstructionMap.setLtid(15);
             ltlogInstructionMap.setIndexx(27394);
-            ltlogInstructionMap.setNum(2300L);
+            ltlogInstructionMap.setIr1execute(2300L);
             updateLtlogInstructionList.add(ltlogInstructionMap);
         }
 
@@ -66,7 +71,7 @@ public class LtlogInstructionMapTest {
             LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
             ltlogInstructionMap.setLtid(15);
             ltlogInstructionMap.setIndexx(27394);
-            ltlogInstructionMap.setNum(2300L);
+            ltlogInstructionMap.setIr1execute(2300L);
             updateLtlogInstructionList.add(ltlogInstructionMap);
         }
 
@@ -84,7 +89,7 @@ public class LtlogInstructionMapTest {
             for (int i = 0; i < updateLtlogInstructionList.size(); i++) {
                 System.out.println(i);
                 LtlogInstructionMap ltlogInstructionMap = updateLtlogInstructionList.get(i);
-                ps.setLong(1, ltlogInstructionMap.getNum());
+                ps.setLong(1, ltlogInstructionMap.getIr1execute());
                 ps.setInt(2, ltlogInstructionMap.getLtid());
                 ps.setInt(3, ltlogInstructionMap.getIndexx());
                 ps.addBatch();
@@ -114,7 +119,7 @@ public class LtlogInstructionMapTest {
 
         ltlogInstructionMap.setUid("23-7340");
         ltlogInstructionMap.setLtid(23);
-        ltlogInstructionMap.setNum(15L);
+        ltlogInstructionMap.setIr1execute(15L);
         System.out.println(ltlogInstructionMap);
 
         ltlogInstructionMapService.updateById(ltlogInstructionMap);
@@ -133,5 +138,20 @@ public class LtlogInstructionMapTest {
             String operand = ltlogInstructionMap.getOperand();
             System.out.println(operand+"\t"+ operandHandler.pattern(operand));
         }
+    }
+
+    @Test
+    void testMapper(){
+        List<String> notInList = new ArrayList<>();
+        notInList.add("retNan");
+        List<Object> list = ltlogInstructionMapMapper.getLtlogInstructionMapsAll("", "ir2execute", "desc", 26, 0, 10,notInList,null);
+
+        List<LtlogInstructionMap> ltlogInstructionMapsAll = (List<LtlogInstructionMap>) list.get(0); //数据集合
+        Integer total = ((List<Integer>) list.get(1)).get(0);//总量
+        for (LtlogInstructionMap ltlogInstructionMap : ltlogInstructionMapsAll) {
+            System.out.println(ltlogInstructionMap);
+        }
+        System.out.println(total);
+
     }
 }

@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loongson.debug.mapper.LtlogInstructionMapMapper">
-    <select id="getLtlogInstructionMapsComboed" resultType="com.loongson.debug.entity.LtlogInstructionMap" parameterType="java.lang.Integer">
-        select operator, sum(num)as num from ltlog_instruction_map where ltid = #{ltid} group by operator order by num desc
+    <select id="getLtlogInstructionMapsComboed" resultType="com.loongson.debug.entity.LtlogInstructionPattern"
+            parameterType="java.lang.Integer">
+        select operator,
+               any_value(sumir1)    as sumir1,
+               any_value(sumir2)    as sumir2,
+               any_value(sumir1all) as sumir1all,
+               any_value(sumir2all) as sumir2all
+        from ltlog_instruction_pattern
+        where ltid = 26
+        group by operator
+        order by sumir2 desc
     </select>
+
+    <select id="getLtlogInstructionMapsAll" resultMap="BaseResultMap,count">
+        select SQL_CALC_FOUND_ROWS *
+        from ltlog_instruction_map
+        where ltid = #{ltid}
+        <if test="operator!=''">
+            and operator = #{operator}
+        </if>
+        <if test="notInList.size != 0">
+            and concat(operator,pattern) not in
+            <foreach collection="notInList" index="index" item="notInList" open="(" separator="," close=")">
+                #{notInList}
+            </foreach>
+        </if>
+          <if test="hiddenOperator.size != 0">
+            and operator not in
+            <foreach collection="hiddenOperator" index="index" item="hiddenOperator" open="(" separator="," close=")">
+                #{hiddenOperator}
+            </foreach>
+        </if>
+        order by ${orderby} ${order}
+        limit #{limitlow},#{limit};
+        SELECT FOUND_ROWS() AS total;
+    </select>
+    <resultMap id="BaseResultMap" type="com.loongson.debug.entity.LtlogInstructionMap">
+        <id column="uid" jdbcType="VARCHAR" property="uid"/>
+    </resultMap>
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+
 </mapper>

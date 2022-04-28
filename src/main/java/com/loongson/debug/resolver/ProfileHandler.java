@@ -1,19 +1,17 @@
 package com.loongson.debug.resolver;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.loongson.debug.entity.LtlogAnalysis;
 import com.loongson.debug.entity.LtlogInstructionMap;
+import com.loongson.debug.entity.LtlogInstructionPattern;
 import com.loongson.debug.entity.TBAnalysis;
-import com.loongson.debug.service.ILtLogAnalysisService;
-import com.loongson.debug.service.ILtlogInstructionMapService;
-import com.loongson.debug.service.ITbAnalysisService;
-import com.loongson.debug.service.ITbBlockService;
+import com.loongson.debug.service.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProfileHandler {
 
@@ -22,11 +20,19 @@ public class ProfileHandler {
     private ILtlogInstructionMapService ltlogInstructionMapService;
     private ITbBlockService tbBlockService;
 
-    public void init(ILtLogAnalysisService iLtLogAnalysisService, ITbAnalysisService tbAnalysisService, ILtlogInstructionMapService ltlogInstructionMapService, ITbBlockService tbBlockService) {
+    private ILtlogInstructionPatternService ltlogInstructionPatternService;
+
+    public void init(ILtLogAnalysisService iLtLogAnalysisService,
+                     ITbAnalysisService tbAnalysisService,
+                     ILtlogInstructionMapService ltlogInstructionMapService,
+                     ITbBlockService tbBlockService,
+                     ILtlogInstructionPatternService ltlogInstructionPatternService
+    ) {
         this.iLtLogAnalysisService = iLtLogAnalysisService;
         this.tbAnalysisService = tbAnalysisService;
         this.ltlogInstructionMapService = ltlogInstructionMapService;
         this.tbBlockService = tbBlockService;
+        this.ltlogInstructionPatternService = ltlogInstructionPatternService;
     }
 
     public ArrayList<String> handleT(BufferedReader br, int ltid) throws IOException {
@@ -147,15 +153,22 @@ public class ProfileHandler {
 //        System.out.println(tbAnalysisArrayList);
 
         ArrayList<String> addressNotFound = updateInstructionExecuteTime(tbAnalysisArrayList, ltid);
-        return   addressNotFound;
+        return addressNotFound;
     }
 
     //根据TB块的执行次数统计指令执行次数
     //更新lt_log_instruction_map
     public ArrayList<String> updateInstructionExecuteTime(ArrayList<TBAnalysis> tbAnalyses, int ltid) {
-        //instructionIndex <-> num
-        Map<Integer, Long> instructionNums = new HashMap<>();
+        //instructionIndex <-> LtlogInstructionMap
+        Map<Integer, LtlogInstructionMap> map = new HashMap<>();
+        List<LtlogInstructionMap> ltlogInstructionMapList = ltlogInstructionMapService.list(new QueryWrapper<LtlogInstructionMap>().eq("ltid", ltid));
+        for (LtlogInstructionMap ltlogInstructionMap : ltlogInstructionMapList) {
+            map.put(ltlogInstructionMap.getIndexx(), ltlogInstructionMap);
+        }
+
         //获取tb块的instructions
+        //'0x123'-> [1, 2 , 4 ，1]
+        //list中的数字表示tb块中指令对应的id
         Map<String, ArrayList<Integer>> addressInstructionsMap = tbBlockService.getAddressInstructionsMap(ltid);
         ArrayList<String> addressNotFound = new ArrayList<>();
         System.out.println(addressInstructionsMap);
@@ -163,31 +176,67 @@ public class ProfileHandler {
         for (TBAnalysis tbAnalysis : tbAnalyses) {
             String pc = tbAnalysis.getPc();
             try {
+                //给每一个指令计数
                 for (Integer integer : addressInstructionsMap.get(pc)) {
-                    if (instructionNums.containsKey(integer)) {
-                        long tmp_num = instructionNums.get(integer);
-                        instructionNums.replace(integer, tmp_num + tbAnalysis.getExecTimes());
-                    } else {
-                        instructionNums.put(integer, tbAnalysis.getExecTimes());
-                    }
+                    LtlogInstructionMap ltlogInstructionMap = map.get(integer);
+                    long tmp_num = ltlogInstructionMap.getIr1execute();
+                    ltlogInstructionMap.setIr1execute(tmp_num + tbAnalysis.getExecTimes());
                 }
             } catch (Exception e) {
                 addressNotFound.add(pc);
             }
         }
+        //总的ir1
+        long sumir1 = 0L;
+        //总的ir2
+        long sumir2 = 0L;
+        //patternString -> pattern model
+        HashMap<String, LtlogInstructionPattern> patternHashMap = new HashMap<>();
+        for (LtlogInstructionMap ltlogInstructionMap : ltlogInstructionMapList) {
+            ltlogInstructionMap.setIr2execute(ltlogInstructionMap.getIr1execute() * ltlogInstructionMap.getIr2num());
+            String patternKey = ltlogInstructionMap.getOperator() + ltlogInstructionMap.getPattern();
+            if (patternHashMap.containsKey(patternKey)) {
+                patternHashMap.get(patternKey).increaseIr1execute(ltlogInstructionMap.getIr1execute());
+                patternHashMap.get(patternKey).increaseIr2execute(ltlogInstructionMap.getIr2execute());
+            } else {
+                LtlogInstructionPattern ltlogInstructionPattern = new LtlogInstructionPattern(ltlogInstructionMap);
+                patternHashMap.put(patternKey, ltlogInstructionPattern);
 
-        ArrayList<LtlogInstructionMap> updateLtlogInstructionList = new ArrayList<>();
-        for (Map.Entry<Integer, Long> entry : instructionNums.entrySet()) {
-            LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
-            String id = ltid +"-"+ entry.getKey();
-            ltlogInstructionMap.setUid(id);
+            }
 
-            ltlogInstructionMap.setNum(entry.getValue());
-            updateLtlogInstructionList.add(ltlogInstructionMap);
-
+            sumir1 += ltlogInstructionMap.getIr1execute();
+            sumir2 += ltlogInstructionMap.getIr2execute();
         }
+        long finalSumir1 = sumir1;
+        long finalSumir2 = sumir2;
+        ltlogInstructionMapList.forEach(e -> {
+            e.setSumir1(finalSumir1);
+            e.setSumir2(finalSumir2);
+        });
+
+        //统计pattern总数
+        Map<String, List<LtlogInstructionPattern>> afterGroupMap
+                = patternHashMap.values().stream().
+                collect(Collectors.groupingBy(LtlogInstructionPattern::getOperator));
+        ArrayList<LtlogInstructionPattern> ltlogInstructionMaps = new ArrayList<>();
+        for (Map.Entry<String, List<LtlogInstructionPattern>> entry : afterGroupMap.entrySet()) {
+            long sumir11 = entry.getValue().stream().mapToLong(LtlogInstructionPattern::getIr1execute).sum();
+            long sumir22 = entry.getValue().stream().mapToLong(LtlogInstructionPattern::getIr2execute).sum();
+            entry.getValue().forEach(e -> {
+                        e.setSumir1(sumir11);
+                        e.setSumir2(sumir22);
+                        e.setSumir1all(finalSumir1);
+                        e.setSumir2all(finalSumir2);
+                        ltlogInstructionMaps.add(e);
+                    }
+            );
+        }
+
+        ltlogInstructionPatternService.saveBatch(ltlogInstructionMaps);
+
+
         System.out.println("address not found list:" + addressNotFound);
-        ltlogInstructionMapService.updateBatchById(updateLtlogInstructionList);
+        ltlogInstructionMapService.updateBatchById(ltlogInstructionMapList);
         return addressNotFound;
     }
 }

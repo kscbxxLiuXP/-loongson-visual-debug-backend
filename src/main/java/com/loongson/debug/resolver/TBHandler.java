@@ -108,7 +108,6 @@ public class TBHandler {
             IR1 ir1 = IR1Inst.get(i);
             String key = ir1.getInstruction().getOperator() + ir1.getInstruction().getOperand();
             if (map.containsKey(key)) {
-                map.get(key).numIncrease();
                 instructions.add(map.get(key).getIndexx());
             } else {
                 LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
@@ -123,7 +122,7 @@ public class TBHandler {
                 String operandPattern = operandHandler.pattern(ltlogInstructionMap.getOperand());
                 ltlogInstructionMap.setPattern(operandPattern);
 
-                ltlogInstructionMap.setNum(1L);
+                ltlogInstructionMap.setIr1execute(0L);
                 int startid = IR2Map.get(i);
                 int endid = IR2Map.get(i + 1);
                 ArrayList<String> ir1MapIR2 = new ArrayList<>();

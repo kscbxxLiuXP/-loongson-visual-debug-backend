@@ -25,7 +25,6 @@ public class DataAnalysisTest {
         instructions2.add(5);
 
 
-
         instructions3.add(2);
         instructions3.add(4);
         instructions3.add(5);
@@ -82,14 +81,14 @@ public class DataAnalysisTest {
             LtlogInstructionMap ltlogInstructionMap = new LtlogInstructionMap();
             ltlogInstructionMap.setLtid(ltid);
             ltlogInstructionMap.setIndexx(entry.getKey());
-            ltlogInstructionMap.setNum(entry.getValue());
+            ltlogInstructionMap.setIr1execute(entry.getValue());
             updateLtlogInstructionList.add(ltlogInstructionMap);
 
         }
         System.out.println("address not found list:" + addressNotFound);
         System.out.println(updateLtlogInstructionList);
         for (LtlogInstructionMap ltlogInstructionMap : updateLtlogInstructionList) {
-            System.out.println(ltlogInstructionMap.getIndexx()+":"+ltlogInstructionMap.getNum());
+            System.out.println(ltlogInstructionMap.getIndexx() + ":" + ltlogInstructionMap.getIr1execute());
         }
 
     }

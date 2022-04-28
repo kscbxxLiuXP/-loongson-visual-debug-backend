@@ -8,13 +8,16 @@ import java.util.Collections;
 
 public class CodeGenerator {
     public static void main(String[] args) {
+
+
+
         //sql相关
-        String JDBCUrl = "jdbc:mysql://***:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
+        String JDBCUrl = "jdbc:mysql://liuxinpeng.mysql.rds.aliyuncs.com:3306/loongson_debug?characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
         String username = "liuxp";
-        String password = "";
+        String password = "LiuXinPeng35";
 
         //导出数据库表设置
-        String exportTables = "lt_log_analysis";//用,隔开
+        String exportTables = "ltlog_instruction_pattern";//用,隔开
 
         //包名
         String parentPackage = "com.loongson.debug";
