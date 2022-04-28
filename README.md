@@ -77,3 +77,7 @@ docker run -it \
 [查看高清图](https://www.processon.com/view/link/6265f90b63768950bc5801ed)
 
 (更新中...)
+
+### 数据库错误修改
+
+如果数据库报错提示
