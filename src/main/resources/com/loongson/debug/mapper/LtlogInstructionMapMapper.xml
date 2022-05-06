@@ -9,7 +9,7 @@
                any_value(sumir1all) as sumir1all,
                any_value(sumir2all) as sumir2all
         from ltlog_instruction_pattern
-        where ltid = 26
+        where ltid = #{ltid}
         group by operator
         order by sumir2 desc
     </select>

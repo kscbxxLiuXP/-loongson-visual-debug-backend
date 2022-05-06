@@ -36,6 +36,8 @@ public class LtLogServiceImpl extends ServiceImpl<LtLogMapper, LtLog> implements
     TraceMapper traceMapper;
 
     @Autowired
+    LtLogAnalysisMapper ltLogAnalysisMapper;
+    @Autowired
     UserMapper userMapper;
 
     @Override

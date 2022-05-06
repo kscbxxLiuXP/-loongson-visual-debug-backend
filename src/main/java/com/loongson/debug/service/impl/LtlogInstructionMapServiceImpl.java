@@ -130,14 +130,18 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
         List<String> notInList = new ArrayList<>(set);
 
         //第0页获取0-limit+1个，其他的获取 当前页(first-1项)~(last+1项)一共(limit+2项)
-        List<Object> list = ltlogInstructionMapMapper.getLtlogInstructionMapsAll(operator, orderby, order, ltid, limitlow, limitlow == 0 ? limit + 1 : limit + 2, notInList,hiddenOperator);
+        List<Object> list = ltlogInstructionMapMapper.getLtlogInstructionMapsAll(operator, orderby, order, ltid, limitlow, limitlow == 0 ? limit + 1 : limit + 2, notInList, hiddenOperator);
         List<LtlogInstructionMap> ltlogInstructionMapsAll = (List<LtlogInstructionMap>) list.get(0);
         Integer total = ((List<Integer>) list.get(1)).get(0);//总量
         String lastkey = "";
         String startKey = "";
-        //处理分组信息
-        startKey = ltlogInstructionMapsAll.get(0).getUid();
-        lastkey = ltlogInstructionMapsAll.get(ltlogInstructionMapsAll.size() - 1).getUid();
+        //处理分组信息,
+        //处理下列异常：
+        //jne 只有一种pattern模式
+        //如果筛选jne又将它合并则会出现从数据库抓取的数据为空
+
+        startKey = ltlogInstructionMapsAll.size() == 0 ? "" : ltlogInstructionMapsAll.get(0).getUid();
+        lastkey = ltlogInstructionMapsAll.size() == 0 ? "" : ltlogInstructionMapsAll.get(ltlogInstructionMapsAll.size() - 1).getUid();
 
         if (comboedString.size() != 0) {
             //获取分组
@@ -160,11 +164,11 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
                 find = true;
                 continue;
             }
-            if (key.equals(lastkey) ) {
+            if (key.equals(lastkey)) {
                 //找到下限
                 find = false;
                 //如果是尾页，最后一个元素也要被添加
-                if (currentPage == (total / limit+1)){
+                if (currentPage == (total / limit + 1)) {
                     String p = ltlogInstructionMap.getOperator() + ltlogInstructionMap.getPattern();
                     if (!hiddenString.contains(p)) {
                         result.add(ltlogInstructionMap);
@@ -173,7 +177,7 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
             }
             if (find) {
                 String p = ltlogInstructionMap.getOperator() + ltlogInstructionMap.getPattern();
-                if (!hiddenString.contains(p)&&!hiddenOperator.contains(ltlogInstructionMap.getOperator())) {
+                if (!hiddenString.contains(p) && !hiddenOperator.contains(ltlogInstructionMap.getOperator())) {
                     result.add(ltlogInstructionMap);
                 }
 
@@ -229,6 +233,47 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
     }
 
     @Override
+    public HashMap<String, Object> getLtlogInstructionMapsSpecific(QueryInstructionAllDTO queryInstructionAllDTO) {
+        String operator = queryInstructionAllDTO.getOperator();
+        String pattern = queryInstructionAllDTO.getPattern();
+
+        String orderby = queryInstructionAllDTO.getOrderby();
+        String order = queryInstructionAllDTO.getOrder();
+        int ltid = queryInstructionAllDTO.getLtid();
+        int currentPage = queryInstructionAllDTO.getCurrentPage();
+        int limit = queryInstructionAllDTO.getLimit();
+
+        QueryWrapper<LtlogInstructionMap> wrapper = new QueryWrapper<>();
+        wrapper.eq("ltid", ltid);
+        if (order.equals("asc")) {
+            wrapper.orderByAsc(orderby);
+        } else {
+            wrapper.orderByDesc(orderby);
+        }
+        if (operator != "") {
+            wrapper.eq("operator", operator);
+        }
+        if (pattern != "") {
+            wrapper.eq("pattern", pattern);
+        }
+
+        Page<LtlogInstructionMap> page = new Page<>(currentPage, limit);
+        IPage<LtlogInstructionMap> IPage = ltlogInstructionMapMapper.selectPage(page, wrapper);
+
+        List<LtlogInstructionMap> ltlogInstructionMaps = IPage.getRecords();
+        long pages = IPage.getPages();
+
+        HashMap<String, Object> returnRes = new HashMap<>();
+        returnRes.put("records", ltlogInstructionMaps);
+        returnRes.put("total", IPage.getTotal());
+        returnRes.put("sumir1", ltlogInstructionMaps.get(0).getSumir1());
+        returnRes.put("sumir2", ltlogInstructionMaps.get(0).getSumir2());
+        returnRes.put("pages", pages);
+
+        return returnRes;
+    }
+
+    @Override
     public HashMap<String, Object> getLtlogInstructionMapsAllPatterned(QueryInstructionAllDTO queryInstructionAllDTO) {
         String operator = queryInstructionAllDTO.getOperator();
         String orderby = queryInstructionAllDTO.getOrderby();
@@ -254,8 +299,8 @@ public class LtlogInstructionMapServiceImpl extends ServiceImpl<LtlogInstruction
         if (operator != "") {
             wrapper.eq("operator", operator);
         }
-        wrapper.notIn(hiddenString.size()!=0,"concat(operator,pattern)",hiddenString);
-        wrapper.notIn(hiddenOperator.size()!=0,"operator",hiddenOperator);
+        wrapper.notIn(hiddenString.size() != 0, "concat(operator,pattern)", hiddenString);
+        wrapper.notIn(hiddenOperator.size() != 0, "operator", hiddenOperator);
         Page<LtlogInstructionPattern> page = new Page<>(currentPage, limit);
         IPage<LtlogInstructionPattern> IPage = ltlogInstructionPatternMapper.selectPage(page, wrapper);
 

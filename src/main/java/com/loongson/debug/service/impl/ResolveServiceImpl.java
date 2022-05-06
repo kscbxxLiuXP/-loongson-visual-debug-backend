@@ -27,14 +27,14 @@ public class ResolveServiceImpl implements ResolveService {
 
     //将文件解析成TB块并存储在数据库中
     @Override
-    public Head resolve(File file, int ltid) {
+    public Head resolve(File file, int ltid,String logType) {
 
         Head head = null;
         try {
             offlineResolver.setiTbBlockService(iTbBlockService);
             offlineResolver.setLtlogInstructionMapService(ltlogInstructionMapService);
             offlineResolver.setLtLogAnalysisService(ltLogAnalysisService);
-            head = offlineResolver.resolve(file, 5, ltid);
+            head = offlineResolver.resolve(file, 5, ltid,logType);
 
         } catch (Exception e) {
             e.printStackTrace();

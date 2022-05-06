@@ -27,7 +27,7 @@ public class ResolverTest {
         offlineResolver.setLtlogInstructionMapService(ltlogInstructionMapService);
         offlineResolver.setLtLogAnalysisService(ltLogAnalysisService);
         File file = new File("data/0414/tbmany.txt");
-        offlineResolver.resolve(file, 5, 8);
+        offlineResolver.resolve(file, 5, 8,"1");
 
     }
 }

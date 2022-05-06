@@ -54,7 +54,7 @@ public class OfflineResolver {
      * @author liuxp
      * @since 2022-02-28
      */
-    public Head resolve(File file, int cacheSizeMB, int ltid) {
+    public Head resolve(File file, int cacheSizeMB, int ltid, String logType) {
         Map<String, LtlogInstructionMap> map = new HashMap<>();
         ArrayList<TbBlock> tbBlocks = new ArrayList<>();
         Head head = null;
@@ -70,9 +70,17 @@ public class OfflineResolver {
             System.out.println("解析TB块");
             long startTime = System.currentTimeMillis();   //获取开始时间
             while ((line = br.readLine()) != null) {
-                TbBlock tbBlock = tbHandler.handleT(br, tbnum, ltid, map);
-                tbBlocks.add(tbBlock);
-                tbnum++;
+                try {
+
+
+                    TbBlock tbBlock = tbHandler.handleT(br, tbnum, ltid, map, logType);
+                    tbBlocks.add(tbBlock);
+                    tbnum++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("错误发生前TB块：");
+                    System.out.println(tbBlocks.get(tbBlocks.size()-1));
+                }
             }
             long endTime = System.currentTimeMillis(); //获取结束时间
             System.out.println("Java解析结果用时： " + (endTime - startTime) + "ms");

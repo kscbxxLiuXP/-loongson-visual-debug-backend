@@ -31,6 +31,7 @@ public interface ILtlogInstructionMapService extends IService<LtlogInstructionMa
     List<String> getInstructionTypes(int ltid);
 
     HashMap<String, Object> getLtlogInstructionMapsAll(QueryInstructionAllDTO queryInstructionAllDTO);
+    HashMap<String, Object> getLtlogInstructionMapsSpecific(QueryInstructionAllDTO queryInstructionAllDTO);
 
     HashMap<String, Object> getLtlogInstructionMapsAllPatterned(QueryInstructionAllDTO queryInstructionAllDTO);
 

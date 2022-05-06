@@ -21,10 +21,10 @@ import javax.websocket.server.ServerEndpoint;
 @Component
 public class WebSocket {
     private static int onlineCount = 0;
-    private static Map<Integer, WebSocket> clients = new ConcurrentHashMap<Integer, WebSocket>();
+    private static final Map<Integer, WebSocket> clients = new ConcurrentHashMap<Integer, WebSocket>();
     private Session session;
     private int id;
-    private static GlobalDebugMaintainer globalDebugMaintainer = GlobalDebugMaintainer.getInstance();
+    private static final GlobalDebugMaintainer globalDebugMaintainer = GlobalDebugMaintainer.getInstance();
 
     @OnOpen
     public void onOpen(@PathParam("id") String id, Session session) throws IOException {

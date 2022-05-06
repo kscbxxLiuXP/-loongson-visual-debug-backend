@@ -117,7 +117,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public LtLog uploadLog(MultipartFile file, HttpServletRequest req, @RequestParam String username) throws IOException {
+    public LtLog uploadLog(MultipartFile file, HttpServletRequest req, @RequestParam String username,@RequestParam String logType) throws IOException {
         //测试在哪一步消耗的时间比较长
 
         //先在数据库中建立记录，然后返回数据库中的id，重命名，保存
@@ -158,7 +158,7 @@ public class FileController {
         ltLog.setSize(logFile.length());
 
 
-        Head head = resolveService.resolve(logFile, ltLog.getUid());
+        Head head = resolveService.resolve(logFile, ltLog.getUid(),logType);
 
         logFile.delete();
 

@@ -41,6 +41,10 @@ public class LtlogInstructionMapController {
     public HashMap<String, Object> getLtlogInstructionMapsAll(@RequestBody QueryInstructionAllDTO queryInstructionAllDTO) {
         return ltlogInstructionMapService.getLtlogInstructionMapsAll(queryInstructionAllDTO);
     }
+    @PostMapping("/getSpecific")
+    public HashMap<String, Object> getLtlogInstructionMapsSpecific(@RequestBody QueryInstructionAllDTO queryInstructionAllDTO) {
+        return ltlogInstructionMapService.getLtlogInstructionMapsSpecific(queryInstructionAllDTO);
+    }
 
     @PostMapping("/getAllPatterned")
     public HashMap<String, Object> getLtlogInstructionMapsAllPatterned(@RequestBody QueryInstructionAllDTO queryInstructionAllDTO) {

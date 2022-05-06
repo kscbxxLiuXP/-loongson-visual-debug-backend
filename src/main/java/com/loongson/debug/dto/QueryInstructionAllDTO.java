@@ -8,6 +8,7 @@ import java.util.List;
 
 public class QueryInstructionAllDTO {
     private String operator;
+    private String pattern;
     private String orderby;
     private String order;
     private int ltid;
@@ -22,8 +23,9 @@ public class QueryInstructionAllDTO {
     public QueryInstructionAllDTO() {
     }
 
-    public QueryInstructionAllDTO(String operator, String orderby, String order, int ltid, int currentPage, int limit, String comboed, String hidden,String hiddenOperator) {
+    public QueryInstructionAllDTO(String operator, String pattern, String orderby, String order, int ltid, int currentPage, int limit, String comboed, String hidden, String hiddenOperator) {
         this.operator = operator;
+        this.pattern = pattern;
         this.orderby = orderby;
         this.order = order;
         this.ltid = ltid;
@@ -34,18 +36,27 @@ public class QueryInstructionAllDTO {
         this.hiddenOperator = hiddenOperator;
     }
 
+    public String getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+
     @Override
     public String toString() {
         return "QueryInstructionAllDTO{" +
                 "operator='" + operator + '\'' +
+                ", pattern='" + pattern + '\'' +
                 ", orderby='" + orderby + '\'' +
                 ", order='" + order + '\'' +
                 ", ltid=" + ltid +
                 ", currentPage=" + currentPage +
                 ", limit=" + limit +
-                ", comboed=" + getComboed() +
-                ", hidden=" + getHidden() +
-                ", hiddenOperator=" + getHiddenOperator() +
+                ", comboed='" + comboed + '\'' +
+                ", hidden='" + hidden + '\'' +
+                ", hiddenOperator='" + hiddenOperator + '\'' +
                 '}';
     }
 

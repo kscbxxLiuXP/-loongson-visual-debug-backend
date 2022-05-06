@@ -2,11 +2,8 @@ package com.loongson.debug;
 
 
 import com.loongson.debug.dto.TraceDTO;
-import com.loongson.debug.entity.IR1;
-import com.loongson.debug.entity.IR2;
+import com.loongson.debug.entity.*;
 import com.loongson.debug.dto.TBBlockDTO;
-import com.loongson.debug.entity.LtlogAnalysis;
-import com.loongson.debug.entity.TbBlock;
 import com.loongson.debug.resolver.*;
 import com.loongson.debug.service.ITbBlockService;
 import org.junit.jupiter.api.Test;
@@ -14,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@SpringBootTest
+
 public class HandlerTest {
-    @Autowired
-    ITbBlockService tbBlockService;
+
 
     IR1Handler ir1Handler = new IR1Handler();
 
@@ -62,32 +59,21 @@ public class HandlerTest {
 
     }
 
-    @Test
-    void TBBlockConvertTest() {
-        File file = new File("splitData/TB0.txt");
-        TBBlockDTO tbBlockDto = tbHandler.convert(file, 1);
-        System.out.println(tbBlockDto.toString());
-    }
+
 
     @Test
     void TBHnadlerTest() throws Exception {
-        File file = new File("splitData/TB1");
-        InputStream is = new FileInputStream(file);
+        File file = new File("data/TBBlock/tb-profile.txt");
+        InputStream is = Files.newInputStream(file.toPath());
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr, 5 * 1024 * 1024);
-        TbBlock tbBlockDto = tbHandler.handleT(br, 1, 1,new HashMap<>());
+        HashMap<String, LtlogInstructionMap> map = new HashMap();
+        TbBlock tbBlockDto = tbHandler.handleT(br, 1, 1,map,"2");
         System.out.println(tbBlockDto);
 
     }
 
-    @Test
-    void TraceHandlerTest() throws Exception {
-        traceHandler.init(tbBlockService);
 
-        File file = new File("data/tracefull0326");
-        TraceDTO handle = traceHandler.handle(file, 4);
-        System.out.println(handle);
-    }
 
     @Test
     void OnlineTraceHandlerTest() {

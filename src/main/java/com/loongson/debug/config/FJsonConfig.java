@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class FJsonConfig {
                 SerializerFeature.DisableCircularReferenceDetect);
 
         converter.setFastJsonConfig(config);
-        converter.setDefaultCharset(Charset.forName("UTF-8"));
+        converter.setDefaultCharset(StandardCharsets.UTF_8);
         List<MediaType> mediaTypeList = new ArrayList<>();
         // 解决中文乱码问题，相当于在Controller上的@RequestMapping中加了个属性produces = "application/json"
         mediaTypeList.add(MediaType.APPLICATION_JSON);
